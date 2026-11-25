@@ -1,0 +1,282 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "AI Research Companion (v3) for: Ramping-up hippocampal ripples and their neocortical coupling support human visual short-term memory",
+      "description": "Progressive-disclosure RO-Crate research companion containing a <=2.5 KB routing manifest (COMPANION.md), atomic qualification-bound knowledge cards (cards/), and provenance links to frozen original sources.",
+      "datePublished": "2026-11-20",
+      "license": "CC-BY-4.0",
+      "identifier": "10.7554/eLife.111304",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Jing Liu"
+        },
+        {
+          "@type": "Person",
+          "name": "Xianhui He"
+        },
+        {
+          "@type": "Person",
+          "name": "Can Yang"
+        },
+        {
+          "@type": "Person",
+          "name": "Nikolai Axmacher"
+        },
+        {
+          "@type": "Person",
+          "name": "Gui Xue"
+        },
+        {
+          "@type": "Person",
+          "name": "Shaomin Zhang"
+        },
+        {
+          "@type": "Person",
+          "name": "Ying Cai"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "COMPANION.md"
+        },
+        {
+          "@id": "cards/C01-stage-ripple-rates.md"
+        },
+        {
+          "@id": "cards/C02-hpc-ripple-ramping-vstm.md"
+        },
+        {
+          "@id": "cards/C03-hpc-ltl-coupled-ripples.md"
+        },
+        {
+          "@id": "cards/C04-coupled-ripple-ltl-reactivation.md"
+        },
+        {
+          "@id": "cards/C05-vstm-ltm-dissociation.md"
+        },
+        {
+          "@id": "cards/D01-cohort-trials-mdar.md"
+        },
+        {
+          "@id": "cards/D02-electrode-coverage-slopes.md"
+        },
+        {
+          "@id": "cards/M01-ieeg-ied-ripple-detection.md"
+        },
+        {
+          "@id": "cards/M02-lmm-glmm-trial-rules.md"
+        },
+        {
+          "@id": "cards/M03-coupling-svm-surrogates.md"
+        },
+        {
+          "@id": "cards/Q01-epilepsy-hfa-mtl-controls.md"
+        },
+        {
+          "@id": "cards/Q02-dynamic-coding-lag-task-limits.md"
+        },
+        {
+          "@id": "cards/Q03-author-response-controls.md"
+        },
+        {
+          "@id": "cards/Q04-final-reviewer-reservations.md"
+        },
+        {
+          "@id": "cards/U01-preprint-to-vor-assessment.md"
+        },
+        {
+          "@id": "cards/U02-v1-to-vor-analytical-changes.md"
+        }
+      ]
+    },
+    {
+      "@id": "COMPANION.md",
+      "@type": "File",
+      "name": "Progressive-Disclosure Companion Routing Manifest",
+      "encodingFormat": "text/markdown",
+      "sha256": "9ce1dedb6eeb8a3536a9b855b6daae58f6cc63f36cc62e9e23353e1bf14b561b"
+    },
+    {
+      "@id": "cards/C01-stage-ripple-rates.md",
+      "@type": "File",
+      "name": "C01: Task-stage HPC and LTL ripple rates and null VSTM accuracy contrasts",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "f6c8fb71eed4eb7c6986d47f89bef7b8c7d32ab2a9955a181c3b8c8cdbff9e47"
+    },
+    {
+      "@id": "cards/C02-hpc-ripple-ramping-vstm.md",
+      "@type": "File",
+      "name": "C02: Maintenance HPC ripple ramping predicts VSTM accuracy and dissociates from LTL",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "91e1f3099772d4f4b97005dcf50c5bffabcc6e5475ee9720e970251b5047ecae"
+    },
+    {
+      "@id": "cards/C03-hpc-ltl-coupled-ripples.md",
+      "@type": "File",
+      "name": "C03: HPC-LTL coupled ripples predict VSTM accuracy without ramping or directional lag",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "cefb71aa34f6b3afa7caa72aee16b89289a94c98d851e4dcb06c65927e2787ef"
+    },
+    {
+      "@id": "cards/C04-coupled-ripple-ltl-reactivation.md",
+      "@type": "File",
+      "name": "C04: Coupled ripples selectively lock late-encoding LTL category reactivation",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "45783bb74613f7818bf988e968616c4fb906e52d32ed193701bcb261a3719370"
+    },
+    {
+      "@id": "cards/C05-vstm-ltm-dissociation.md",
+      "@type": "File",
+      "name": "C05: VSTM ripple dynamics dissociate from subsequent LTM cued recall",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "f4b61c2becc825b769e10730e2f7717ed2e149673494990837597deb1bbc3739"
+    },
+    {
+      "@id": "cards/D01-cohort-trials-mdar.md",
+      "@type": "File",
+      "name": "D01: Patient cohort, DMS trial imbalance, and MDAR reporting disclosures",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "sha256": "4c9b46b4a5322f1aa71c7efcdd12f61fe72eed52d5ff7923a38001b251970969"
+    },
+    {
+      "@id": "cards/D02-electrode-coverage-slopes.md",
+      "@type": "File",
+      "name": "D02: Participant-level electrode coverage across HPC, LTL, and unanalyzed MTL sites",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "sha256": "45fd24fd32c8c17360cc04189bacc0e5295b2e844e0654119a2d5ec715439413"
+    },
+    {
+      "@id": "cards/M01-ieeg-ied-ripple-detection.md",
+      "@type": "File",
+      "name": "M01: iEEG preprocessing, IED screening, ripple detection, and waveform validation",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "54fd954df124b5c491f9aebf125bd7f32bb9219b337a47acb9efde3ab1c3c337"
+    },
+    {
+      "@id": "cards/M02-lmm-glmm-trial-rules.md",
+      "@type": "File",
+      "name": "M02: LMM and GLMM specifications, trial inclusion rules, and permutation tests",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "175400ed216f28d0a3b3b2a98ced1677c6d970d21063c93aaac6fe5af14e7614"
+    },
+    {
+      "@id": "cards/M03-coupling-svm-surrogates.md",
+      "@type": "File",
+      "name": "M03: Coupled-ripple windows, broadband SVM decoding, and surrogate locking",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "38f7d356031651078e5929e1904dcf4ee8651dc81bd8a1263413e15bb9b1ebe1"
+    },
+    {
+      "@id": "cards/Q01-epilepsy-hfa-mtl-controls.md",
+      "@type": "File",
+      "name": "Q01: Epilepsy sample caveat, broadband HFA overlap, and absent non-HPC MTL controls",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "37f19bd54976b7f330e9de6798fbe42d4af1ac652115910818ec361536f8662a"
+    },
+    {
+      "@id": "cards/Q02-dynamic-coding-lag-task-limits.md",
+      "@type": "File",
+      "name": "Q02: Dynamic-coding paradox, zero directional lag, and impure VSTM task limits",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "74983d4dfaec4939ff4c422a12e4d89519274b26115d8407a570b8d39bf96348"
+    },
+    {
+      "@id": "cards/Q03-author-response-controls.md",
+      "@type": "File",
+      "name": "Q03: Author-response control analyses and response-vs-article discrepancies",
+      "additionalType": "review_disposition",
+      "encodingFormat": "text/markdown",
+      "sha256": "d3fd26bb33d5a1a2bf0bf1041b90d92f9b1930cb8fd3e1ac3f755d9a825b1f29"
+    },
+    {
+      "@id": "cards/Q04-final-reviewer-reservations.md",
+      "@type": "File",
+      "name": "Q04: Final VOR public review dispositions and remaining reservations (Reviewers #1-#3)",
+      "additionalType": "review_disposition",
+      "encodingFormat": "text/markdown",
+      "sha256": "f558dc1bbd53be5734d28a31c723704088c584ed6240f609f6920fad9e47499c"
+    },
+    {
+      "@id": "cards/U01-preprint-to-vor-assessment.md",
+      "@type": "File",
+      "name": "U01: Preprint-to-VOR timeline and eLife Assessment upgrade from solid to convincing",
+      "additionalType": "update",
+      "encodingFormat": "text/markdown",
+      "sha256": "71852bca363885aa8109e703af704c492ea971239250b2e58cfe43e6128fad17"
+    },
+    {
+      "@id": "cards/U02-v1-to-vor-analytical-changes.md",
+      "@type": "File",
+      "name": "U02: Concrete analytical, statistical, and reporting changes from preprint v1 to VOR",
+      "additionalType": "update",
+      "encodingFormat": "text/markdown",
+      "sha256": "9a6ab77eca97b189d6a65660d8da772f0f3d323945e5b28b0c76cbe73d28b793"
+    },
+    {
+      "@id": "source:elife_assessment_and_versions",
+      "@type": "File",
+      "name": "eLife Assessment and Version History",
+      "additionalType": "peer_review_assessment",
+      "sha256": "dfea446dc36fec675ad8a2a533bdc37cb7282e7c85048f65e4ff2b7868c3a9c3",
+      "contentSize": "1087"
+    },
+    {
+      "@id": "source:public_reviews",
+      "@type": "File",
+      "name": "Public Peer Reviews (3 reviewers)",
+      "additionalType": "peer_review",
+      "sha256": "1c48fd16327b8f46f6f3dd2fa28cd1f2602e1b7c7fdf1ebc13526a6f49db25b1",
+      "contentSize": "6981"
+    },
+    {
+      "@id": "source:author_response",
+      "@type": "File",
+      "name": "Point-by-Point Author Response to Peer Review",
+      "additionalType": "author_response",
+      "sha256": "b3eac6bac88a20722644c9a21031bd75fc15ac2b47eaa2b501868545d509b5a6",
+      "contentSize": "104487"
+    },
+    {
+      "@id": "source:supp1",
+      "@type": "File",
+      "name": "Supplementary file 1 (elife-111304-supp1-v1.docx)",
+      "additionalType": "supplement",
+      "sha256": "fcdc2b85c65f1dbcdffdd6106c0a1c3cc778bd182b2c5d258ebe4a5d4281e3ec",
+      "contentSize": "1849"
+    },
+    {
+      "@id": "source:mdar",
+      "@type": "File",
+      "name": "MDAR checklist (elife-111304-mdarchecklist1-v1.pdf)",
+      "additionalType": "checklist",
+      "sha256": "04dfaaf719bdc27ebfa4a456061bc84014349a1ec8d22318efd5a2b98c6448f4",
+      "contentSize": "10110"
+    }
+  ]
+}

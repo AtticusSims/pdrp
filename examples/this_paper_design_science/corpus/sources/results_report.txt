@@ -1,0 +1,147 @@
+# Companion v3 Multi-Paper Benchmark — Statistical Results
+
+- **Total scored trials:** 2304
+- **Inter-judge agreement:** Clean-success Cohen's κ = **0.82** | Atomic item-level κ = **0.8845**
+
+## Overall by Condition
+| Condition | n | Clean Success (95% CI) | Mean Rubric | Overclaim | Halluc. | Median Tokens | Mean Tool Calls | Mean Card Calls |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `paper_only` | 512 | **38.7%** (34.4–43.0%) | 56.9% | 4.1% | 13.7% | 22,840 | 0.0 | 0.0 |
+| `raw_supplements` | 512 | **71.7%** (68.0–75.8%) | 90.1% | 3.7% | 4.3% | 74,509 | 3.93 | 0.0 |
+| `companion_v3` | 512 | **74.2%** (70.3–77.9%) | 91.6% | 3.3% | 4.3% | 77,075 | 3.88 | 1.38 |
+| `companion_v3_1` | 512 | **74.6%** (70.9–78.1%) | 90.5% | 3.5% | 4.9% | 75,639 | 3.29 | 1.18 |
+| `naive_preload` | 256 | **70.7%** (65.2–75.8%) | 90.1% | 3.9% | 4.7% | 71,892 | 2.96 | 0.0 |
+
+## Key Paired Contrasts (Matched Model × Question)
+| Contrast & Stratum | Pairs | Rate A vs Rate B (Δ) | Gains/Losses | McNemar p | Rubric Δ (Wilcoxon p) | Med. Tokens A vs B |
+|---|---:|---:|---:|---:|---:|---:|
+| `companion_v3_1__vs__companion_v3__A:article_only` | 128 | 90.6% vs 88.3% (**+2.3 pp**) | +7 / -4 | 0.5488 | +0.9 pp (0.156) | 40,089 vs 52,818 |
+| `companion_v3_1__vs__companion_v3__ALL` | 512 | 74.6% vs 74.2% (**+0.4 pp**) | +36 / -34 | 0.905 | -1.2 pp (0.1945) | 75,639 vs 77,075 |
+| `companion_v3_1__vs__companion_v3__B:supplementary_fact` | 128 | 72.7% vs 73.4% (**-0.8 pp**) | +7 / -8 | 1 | -2.7 pp (0.09772) | 77,990 vs 77,604 |
+| `companion_v3_1__vs__companion_v3__C:qualification_binding` | 128 | 62.5% vs 59.4% (**+3.1 pp**) | +17 / -13 | 0.5847 | -1.1 pp (0.7907) | 62,485 vs 73,688 |
+| `companion_v3_1__vs__companion_v3__D:temporal_and_abstention` | 128 | 72.7% vs 75.8% (**-3.1 pp**) | +5 / -9 | 0.4239 | -1.8 pp (0.2899) | 106,701 vs 122,069 |
+| `companion_v3_1__vs__naive_preload__A:article_only` | 64 | 87.5% vs 90.6% (**-3.1 pp**) | +1 / -3 | 0.625 | -0.2 pp (0.8307) | 28,889 vs 61,615 |
+| `companion_v3_1__vs__naive_preload__ALL` | 256 | 72.7% vs 70.7% (**+1.9 pp**) | +20 / -15 | 0.4996 | -0.6 pp (0.3454) | 58,253 vs 71,892 |
+| `companion_v3_1__vs__naive_preload__B:supplementary_fact` | 64 | 73.4% vs 70.3% (**+3.1 pp**) | +6 / -4 | 0.7539 | -0.5 pp (0.8576) | 66,190 vs 71,295 |
+| `companion_v3_1__vs__naive_preload__C:qualification_binding` | 64 | 59.4% vs 50.0% (**+9.4 pp**) | +11 / -5 | 0.2101 | -0.4 pp (0.7056) | 51,889 vs 35,576 |
+| `companion_v3_1__vs__naive_preload__D:temporal_and_abstention` | 64 | 70.3% vs 71.9% (**-1.6 pp**) | +2 / -3 | 1 | -1.3 pp (0.3127) | 102,285 vs 151,345 |
+| `companion_v3_1__vs__paper_only__A:article_only` | 128 | 90.6% vs 86.7% (**+3.9 pp**) | +9 / -4 | 0.2668 | +1.2 pp (0.08618) | 40,089 vs 22,451 |
+| `companion_v3_1__vs__paper_only__ALL` | 512 | 74.6% vs 38.7% (**+35.9 pp**) | +193 / -9 | 0 | +33.5 pp (0) | 75,639 vs 22,840 |
+| `companion_v3_1__vs__paper_only__B:supplementary_fact` | 128 | 72.7% vs 0.0% (**+72.7 pp**) | +93 / -0 | 0 | +82.0 pp (0) | 77,990 vs 22,914 |
+| `companion_v3_1__vs__paper_only__C:qualification_binding` | 128 | 62.5% vs 38.3% (**+24.2 pp**) | +35 / -4 | 0 | +10.1 pp (1e-06) | 62,485 vs 22,598 |
+| `companion_v3_1__vs__paper_only__D:temporal_and_abstention` | 128 | 72.7% vs 29.7% (**+43.0 pp**) | +56 / -1 | 0 | +40.8 pp (0) | 106,701 vs 23,231 |
+| `companion_v3_1__vs__raw_supplements__A:article_only` | 128 | 90.6% vs 86.7% (**+3.9 pp**) | +10 / -5 | 0.3018 | +1.1 pp (0.1743) | 40,089 vs 33,477 |
+| `companion_v3_1__vs__raw_supplements__ALL` | 512 | 74.6% vs 71.7% (**+2.9 pp**) | +43 / -28 | 0.09592 | +0.3 pp (0.941) | 75,639 vs 74,509 |
+| `companion_v3_1__vs__raw_supplements__B:supplementary_fact` | 128 | 72.7% vs 73.4% (**-0.8 pp**) | +7 / -8 | 1 | -2.1 pp (0.1321) | 77,990 vs 64,921 |
+| `companion_v3_1__vs__raw_supplements__C:qualification_binding` | 128 | 62.5% vs 57.0% (**+5.5 pp**) | +14 / -7 | 0.1892 | +1.0 pp (0.7661) | 62,485 vs 81,347 |
+| `companion_v3_1__vs__raw_supplements__D:temporal_and_abstention` | 128 | 72.7% vs 69.5% (**+3.1 pp**) | +12 / -8 | 0.5034 | +1.3 pp (0.5534) | 106,701 vs 118,052 |
+| `companion_v3__vs__naive_preload__A:article_only` | 64 | 81.2% vs 90.6% (**-9.4 pp**) | +1 / -7 | 0.07031 | -1.6 pp (0.3063) | 45,469 vs 61,615 |
+| `companion_v3__vs__naive_preload__ALL` | 256 | 71.1% vs 70.7% (**+0.4 pp**) | +21 / -20 | 1 | +0.5 pp (0.8796) | 56,956 vs 71,892 |
+| `companion_v3__vs__naive_preload__B:supplementary_fact` | 64 | 75.0% vs 70.3% (**+4.7 pp**) | +6 / -3 | 0.5078 | +2.3 pp (0.2481) | 65,700 vs 71,295 |
+| `companion_v3__vs__naive_preload__C:qualification_binding` | 64 | 51.6% vs 50.0% (**+1.6 pp**) | +9 / -8 | 1 | -1.9 pp (0.1907) | 46,208 vs 35,576 |
+| `companion_v3__vs__naive_preload__D:temporal_and_abstention` | 64 | 76.6% vs 71.9% (**+4.7 pp**) | +5 / -2 | 0.4531 | +2.9 pp (0.2596) | 124,373 vs 151,345 |
+| `companion_v3__vs__paper_only__A:article_only` | 128 | 88.3% vs 86.7% (**+1.6 pp**) | +10 / -8 | 0.8145 | +0.4 pp (0.6828) | 52,818 vs 22,451 |
+| `companion_v3__vs__paper_only__ALL` | 512 | 74.2% vs 38.7% (**+35.5 pp**) | +199 / -17 | 0 | +34.7 pp (0) | 77,075 vs 22,840 |
+| `companion_v3__vs__paper_only__B:supplementary_fact` | 128 | 73.4% vs 0.0% (**+73.4 pp**) | +94 / -0 | 0 | +84.7 pp (0) | 77,604 vs 22,914 |
+| `companion_v3__vs__paper_only__C:qualification_binding` | 128 | 59.4% vs 38.3% (**+21.1 pp**) | +35 / -8 | 4.2e-05 | +11.2 pp (1e-06) | 73,688 vs 22,598 |
+| `companion_v3__vs__paper_only__D:temporal_and_abstention` | 128 | 75.8% vs 29.7% (**+46.1 pp**) | +60 / -1 | 0 | +42.6 pp (0) | 122,069 vs 23,231 |
+| `companion_v3__vs__raw_supplements__A:article_only` | 128 | 88.3% vs 86.7% (**+1.6 pp**) | +8 / -6 | 0.7905 | +0.2 pp (0.8699) | 52,818 vs 33,477 |
+| `companion_v3__vs__raw_supplements__ALL` | 512 | 74.2% vs 71.7% (**+2.5 pp**) | +49 / -36 | 0.1928 | +1.5 pp (0.0765) | 77,075 vs 74,509 |
+| `companion_v3__vs__raw_supplements__B:supplementary_fact` | 128 | 73.4% vs 73.4% (**+0.0 pp**) | +7 / -7 | 1 | +0.7 pp (0.8745) | 77,604 vs 64,921 |
+| `companion_v3__vs__raw_supplements__C:qualification_binding` | 128 | 59.4% vs 57.0% (**+2.3 pp**) | +18 / -15 | 0.7283 | +2.1 pp (0.2493) | 73,688 vs 81,347 |
+| `companion_v3__vs__raw_supplements__D:temporal_and_abstention` | 128 | 75.8% vs 69.5% (**+6.2 pp**) | +16 / -8 | 0.1516 | +3.1 pp (0.09865) | 122,069 vs 118,052 |
+| `raw_supplements__vs__paper_only__A:article_only` | 128 | 86.7% vs 86.7% (**+0.0 pp**) | +9 / -9 | 1 | +0.1 pp (0.6858) | 33,477 vs 22,451 |
+| `raw_supplements__vs__paper_only__ALL` | 512 | 71.7% vs 38.7% (**+33.0 pp**) | +187 / -18 | 0 | +33.2 pp (0) | 74,509 vs 22,840 |
+| `raw_supplements__vs__paper_only__B:supplementary_fact` | 128 | 73.4% vs 0.0% (**+73.4 pp**) | +94 / -0 | 0 | +84.0 pp (0) | 64,921 vs 22,914 |
+| `raw_supplements__vs__paper_only__C:qualification_binding` | 128 | 57.0% vs 38.3% (**+18.8 pp**) | +28 / -4 | 1.9e-05 | +9.1 pp (1e-05) | 81,347 vs 22,598 |
+| `raw_supplements__vs__paper_only__D:temporal_and_abstention` | 128 | 69.5% vs 29.7% (**+39.8 pp**) | +56 / -5 | 0 | +39.6 pp (0) | 118,052 vs 23,231 |
+
+## Condition × Stratum Breakdown
+| Condition | Stratum | n | Clean Success | Mean Rubric | Overclaim | Halluc. | Wrong Abst. | Med. Tokens |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `paper_only` | `article_only` | 128 | **86.7%** | 96.6% | 0.0% | 0.0% | 0.0% | 22,451 |
+| `paper_only` | `supplementary_fact` | 128 | **0.0%** | 7.4% | 5.5% | 25.0% | 93.8% | 22,914 |
+| `paper_only` | `qualification_binding` | 128 | **38.3%** | 76.4% | 9.4% | 10.2% | 16.4% | 22,598 |
+| `paper_only` | `temporal_and_abstention` | 128 | **29.7%** | 47.3% | 1.6% | 19.5% | 46.9% | 23,231 |
+| `raw_supplements` | `article_only` | 128 | **86.7%** | 96.7% | 1.6% | 1.6% | 0.0% | 33,477 |
+| `raw_supplements` | `supplementary_fact` | 128 | **73.4%** | 91.4% | 3.1% | 4.7% | 2.3% | 64,921 |
+| `raw_supplements` | `qualification_binding` | 128 | **57.0%** | 85.5% | 5.5% | 3.1% | 0.8% | 81,347 |
+| `raw_supplements` | `temporal_and_abstention` | 128 | **69.5%** | 86.8% | 4.7% | 7.8% | 7.8% | 118,052 |
+| `companion_v3` | `article_only` | 128 | **88.3%** | 96.9% | 0.8% | 2.3% | 0.0% | 52,818 |
+| `companion_v3` | `supplementary_fact` | 128 | **73.4%** | 92.1% | 2.3% | 2.3% | 0.8% | 77,604 |
+| `companion_v3` | `qualification_binding` | 128 | **59.4%** | 87.6% | 5.5% | 9.4% | 0.0% | 73,688 |
+| `companion_v3` | `temporal_and_abstention` | 128 | **75.8%** | 89.9% | 4.7% | 3.1% | 2.3% | 122,069 |
+| `companion_v3_1` | `article_only` | 128 | **90.6%** | 97.8% | 0.0% | 2.3% | 0.0% | 40,089 |
+| `companion_v3_1` | `supplementary_fact` | 128 | **72.7%** | 89.4% | 5.5% | 3.1% | 1.6% | 77,990 |
+| `companion_v3_1` | `qualification_binding` | 128 | **62.5%** | 86.5% | 3.9% | 5.5% | 0.8% | 62,485 |
+| `companion_v3_1` | `temporal_and_abstention` | 128 | **72.7%** | 88.1% | 4.7% | 8.6% | 3.1% | 106,701 |
+| `naive_preload` | `article_only` | 64 | **90.6%** | 97.4% | 1.6% | 0.0% | 0.0% | 61,615 |
+| `naive_preload` | `supplementary_fact` | 64 | **70.3%** | 90.6% | 3.1% | 4.7% | 1.6% | 71,295 |
+| `naive_preload` | `qualification_binding` | 64 | **50.0%** | 86.5% | 4.7% | 7.8% | 0.0% | 35,576 |
+| `naive_preload` | `temporal_and_abstention` | 64 | **71.9%** | 85.9% | 6.2% | 6.2% | 4.7% | 151,345 |
+
+## Model × Condition Breakdown
+| Model | Condition | n | Clean Success | Mean Rubric | Overclaim | Med. Tokens | Med. Latency (s) | Mean Tools |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `deepseek/deepseek-v3.2` | `paper_only` | 64 | **32.8%** | 55.7% | 6.2% | 20,783 | 5.3 | 0.0 |
+| `deepseek/deepseek-v3.2` | `raw_supplements` | 64 | **54.7%** | 87.0% | 3.1% | 127,013 | 25.72 | 4.44 |
+| `deepseek/deepseek-v3.2` | `companion_v3` | 64 | **70.3%** | 92.1% | 3.1% | 158,505 | 28.29 | 5.16 |
+| `deepseek/deepseek-v3.2` | `companion_v3_1` | 64 | **54.7%** | 79.1% | 7.8% | 30,458 | 12.32 | 2.03 |
+| `deepseek/deepseek-v3.2` | `naive_preload` | 32 | **56.2%** | 86.2% | 6.2% | 97,667 | 17.56 | 2.62 |
+| `gemma4:31b-it-qat` | `paper_only` | 64 | **29.7%** | 52.3% | 7.8% | 21,994 | 12.07 | 0.0 |
+| `gemma4:31b-it-qat` | `raw_supplements` | 64 | **50.0%** | 79.5% | 6.2% | 35,679 | 13.02 | 0.83 |
+| `gemma4:31b-it-qat` | `companion_v3` | 64 | **46.9%** | 80.5% | 6.2% | 35,320 | 14.8 | 0.88 |
+| `gemma4:31b-it-qat` | `companion_v3_1` | 64 | **54.7%** | 82.1% | 7.8% | 37,074 | 15.7 | 1.0 |
+| `gemma4:31b-it-qat` | `naive_preload` | 32 | **46.9%** | 80.2% | 6.2% | 35,279 | 14.57 | 0.19 |
+| `gpt-oss:20b` | `paper_only` | 64 | **28.1%** | 50.3% | 14.1% | 24,184 | 5.36 | 0.0 |
+| `gpt-oss:20b` | `raw_supplements` | 64 | **37.5%** | 71.4% | 20.3% | 83,028 | 6.87 | 3.3 |
+| `gpt-oss:20b` | `companion_v3` | 64 | **46.9%** | 75.6% | 15.6% | 65,469 | 5.81 | 2.31 |
+| `gpt-oss:20b` | `companion_v3_1` | 64 | **39.1%** | 75.3% | 10.9% | 76,947 | 5.72 | 2.73 |
+| `gpt-oss:20b` | `naive_preload` | 32 | **46.9%** | 80.5% | 15.6% | 93,329 | 5.56 | 2.28 |
+| `mistralai/mistral-large-4-0` | `paper_only` | 64 | **48.4%** | 61.3% | 1.6% | 22,127 | 16.08 | 0.0 |
+| `mistralai/mistral-large-4-0` | `raw_supplements` | 64 | **89.1%** | 97.1% | 0.0% | 55,431 | 22.51 | 4.25 |
+| `mistralai/mistral-large-4-0` | `companion_v3` | 64 | **89.1%** | 99.1% | 0.0% | 77,747 | 22.31 | 5.38 |
+| `mistralai/mistral-large-4-0` | `companion_v3_1` | 64 | **92.2%** | 98.2% | 0.0% | 75,937 | 18.22 | 4.41 |
+| `mistralai/mistral-large-4-0` | `naive_preload` | 32 | **84.4%** | 96.2% | 0.0% | 68,999 | 24.57 | 4.34 |
+| `qwen/qwen3.8-max-0902` | `paper_only` | 64 | **40.6%** | 58.1% | 1.6% | 23,714 | 39.08 | 0.0 |
+| `qwen/qwen3.8-max-0902` | `raw_supplements` | 64 | **84.4%** | 97.1% | 0.0% | 118,620 | 46.83 | 6.5 |
+| `qwen/qwen3.8-max-0902` | `companion_v3` | 64 | **93.8%** | 99.0% | 0.0% | 92,833 | 33.71 | 5.03 |
+| `qwen/qwen3.8-max-0902` | `companion_v3_1` | 64 | **95.3%** | 99.2% | 0.0% | 86,817 | 35.16 | 4.81 |
+| `qwen/qwen3.8-max-0902` | `naive_preload` | 32 | **84.4%** | 96.4% | 0.0% | 113,175 | 40.47 | 4.22 |
+| `qwen3.8:27b-q4_K_M` | `paper_only` | 64 | **43.8%** | 58.3% | 1.6% | 22,714 | 13.51 | 0.0 |
+| `qwen3.8:27b-q4_K_M` | `raw_supplements` | 64 | **78.1%** | 92.7% | 0.0% | 52,859 | 15.36 | 2.22 |
+| `qwen3.8:27b-q4_K_M` | `companion_v3` | 64 | **76.6%** | 93.3% | 1.6% | 58,430 | 19.17 | 2.58 |
+| `qwen3.8:27b-q4_K_M` | `companion_v3_1` | 64 | **79.7%** | 94.2% | 0.0% | 71,929 | 18.08 | 2.39 |
+| `qwen3.8:27b-q4_K_M` | `naive_preload` | 32 | **75.0%** | 89.1% | 0.0% | 53,475 | 16.64 | 1.31 |
+| `thinkingmachines/inkling-2-small` | `paper_only` | 64 | **43.8%** | 60.3% | 0.0% | 23,804 | 7.2 | 0.0 |
+| `thinkingmachines/inkling-2-small` | `raw_supplements` | 64 | **92.2%** | 98.2% | 0.0% | 97,870 | 17.15 | 5.81 |
+| `thinkingmachines/inkling-2-small` | `companion_v3` | 64 | **85.9%** | 97.0% | 0.0% | 102,443 | 9.43 | 5.86 |
+| `thinkingmachines/inkling-2-small` | `companion_v3_1` | 64 | **92.2%** | 98.4% | 0.0% | 90,743 | 11.25 | 4.91 |
+| `thinkingmachines/inkling-2-small` | `naive_preload` | 32 | **93.8%** | 98.0% | 0.0% | 105,345 | 8.82 | 5.0 |
+| `x-ai/grok-4.6` | `paper_only` | 64 | **42.2%** | 58.9% | 0.0% | 22,137 | 11.97 | 0.0 |
+| `x-ai/grok-4.6` | `raw_supplements` | 64 | **87.5%** | 97.9% | 0.0% | 57,621 | 20.87 | 4.06 |
+| `x-ai/grok-4.6` | `companion_v3` | 64 | **84.4%** | 96.4% | 0.0% | 67,863 | 17.66 | 3.86 |
+| `x-ai/grok-4.6` | `companion_v3_1` | 64 | **89.1%** | 97.0% | 1.6% | 77,067 | 21.89 | 4.05 |
+| `x-ai/grok-4.6` | `naive_preload` | 32 | **78.1%** | 94.3% | 3.1% | 66,245 | 15.39 | 3.72 |
+
+## Paper × Condition Breakdown
+| Paper | Condition | n | Clean Success | Mean Rubric | Overclaim | Med. Tokens |
+|---|---|---:|---:|---:|---:|---:|
+| `digital-creativity` | `paper_only` | 128 | **30.5%** | 53.4% | 4.7% | 12,850 |
+| `digital-creativity` | `raw_supplements` | 128 | **57.0%** | 84.3% | 5.5% | 63,794 |
+| `digital-creativity` | `companion_v3` | 128 | **59.4%** | 85.7% | 5.5% | 46,974 |
+| `digital-creativity` | `companion_v3_1` | 128 | **59.4%** | 83.5% | 6.2% | 50,617 |
+| `digital-creativity` | `naive_preload` | 128 | **58.6%** | 84.3% | 7.0% | 71,487 |
+| `elife-110672` | `paper_only` | 128 | **46.9%** | 56.7% | 9.4% | 24,410 |
+| `elife-110672` | `raw_supplements` | 128 | **84.4%** | 91.4% | 3.1% | 56,300 |
+| `elife-110672` | `companion_v3` | 128 | **86.7%** | 94.9% | 3.1% | 89,566 |
+| `elife-110672` | `companion_v3_1` | 128 | **85.2%** | 94.3% | 3.1% | 83,951 |
+| `elife-111304` | `paper_only` | 128 | **40.6%** | 63.8% | 0.8% | 19,919 |
+| `elife-111304` | `raw_supplements` | 128 | **78.1%** | 94.4% | 2.3% | 71,003 |
+| `elife-111304` | `companion_v3` | 128 | **82.8%** | 95.4% | 1.6% | 71,352 |
+| `elife-111304` | `companion_v3_1` | 128 | **85.9%** | 95.5% | 2.3% | 75,639 |
+| `elife-111304` | `naive_preload` | 128 | **82.8%** | 95.9% | 0.8% | 72,452 |
+| `jcal-review` | `paper_only` | 128 | **36.7%** | 53.7% | 1.6% | 32,876 |
+| `jcal-review` | `raw_supplements` | 128 | **67.2%** | 90.3% | 3.9% | 105,778 |
+| `jcal-review` | `companion_v3` | 128 | **68.0%** | 90.5% | 3.1% | 108,061 |
+| `jcal-review` | `companion_v3_1` | 128 | **68.0%** | 88.4% | 2.3% | 109,199 |

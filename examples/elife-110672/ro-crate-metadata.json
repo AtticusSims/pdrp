@@ -1,0 +1,344 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "AI Research Companion (v3) for: Calibrated analysis framework for nanopore direct RNA sequencing uncovers cell-specific m⁶A proportions at conserved sites",
+      "description": "Progressive-disclosure RO-Crate research companion containing a <=2.5 KB routing manifest (COMPANION.md), atomic qualification-bound knowledge cards (cards/), and provenance links to frozen original sources.",
+      "datePublished": "2026-11-20",
+      "license": "CC-BY-4.0",
+      "identifier": "10.7554/eLife.110672",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Denise Ohnezeit"
+        },
+        {
+          "@type": "Person",
+          "name": "Elene Loliashvili"
+        },
+        {
+          "@type": "Person",
+          "name": "Gregory Putzel"
+        },
+        {
+          "@type": "Person",
+          "name": "Ruth Verstraten"
+        },
+        {
+          "@type": "Person",
+          "name": "Adam T Silhavy"
+        },
+        {
+          "@type": "Person",
+          "name": "Jianheng Fox Liu"
+        },
+        {
+          "@type": "Person",
+          "name": "Luke Nicholson"
+        },
+        {
+          "@type": "Person",
+          "name": "Alejandro Pironti"
+        },
+        {
+          "@type": "Person",
+          "name": "Samie R Jaffrey"
+        },
+        {
+          "@type": "Person",
+          "name": "Daniel Depledge"
+        },
+        {
+          "@type": "Person",
+          "name": "Angus C Wilson"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "COMPANION.md"
+        },
+        {
+          "@id": "cards/C01-ivt-calibrated-m6a-filtering.md"
+        },
+        {
+          "@id": "cards/C02-dorado-glori-convergence.md"
+        },
+        {
+          "@id": "cards/C03-nhdf-hd106-conserved-sites-proportions.md"
+        },
+        {
+          "@id": "cards/C04-isoform-resolved-m6a-drs.md"
+        },
+        {
+          "@id": "cards/C05-non-drach-artefacts-and-writers.md"
+        },
+        {
+          "@id": "cards/M01-cell-culture-stm2457-viability-rna.md"
+        },
+        {
+          "@id": "cards/M02-dorado-basecalling-alignment-modkit.md"
+        },
+        {
+          "@id": "cards/M03-pelt-calibration-and-subsampling.md"
+        },
+        {
+          "@id": "cards/M04-glori-protocol-and-comparison-filters.md"
+        },
+        {
+          "@id": "cards/D01-dorado-read-stats-and-accessions.md"
+        },
+        {
+          "@id": "cards/D02-supp2-site-counts-matrix.md"
+        },
+        {
+          "@id": "cards/D03-glori-stats-and-spen-isoforms.md"
+        },
+        {
+          "@id": "cards/Q01-no-biological-replicates-unvalidated-biology.md"
+        },
+        {
+          "@id": "cards/Q02-glori-bias-and-fig3d-directionality.md"
+        },
+        {
+          "@id": "cards/Q03-non-m6a-background-mismatches-crossreactivity.md"
+        },
+        {
+          "@id": "cards/Q04-threshold-subjectivity-and-vor-inconsistencies.md"
+        },
+        {
+          "@id": "cards/U01-peer-review-dispositions-and-claim-moderation.md"
+        },
+        {
+          "@id": "cards/U02-preprint-to-vor-methodological-upgrades.md"
+        }
+      ]
+    },
+    {
+      "@id": "COMPANION.md",
+      "@type": "File",
+      "name": "Progressive-Disclosure Companion Routing Manifest",
+      "encodingFormat": "text/markdown",
+      "sha256": "a0b07f23bccb2718a8a4d23236b5b557be7a9350ea981f33cf4b3b5006e8b56d"
+    },
+    {
+      "@id": "cards/C01-ivt-calibrated-m6a-filtering.md",
+      "@type": "File",
+      "name": "C01: IVT-calibrated thresholds remove Dorado m6A background signal",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "f0769d58b184ed04285d70c896086a7b59e99b5c29312ed69ebfa56de61b030c"
+    },
+    {
+      "@id": "cards/C02-dorado-glori-convergence.md",
+      "@type": "File",
+      "name": "C02: Dorado increasingly recovers high-proportion GLORI m6A sites",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "f1eddbb52b1b14cf70ef47722dea2f494195e45e311a7f37cc2d9aabb89c6251"
+    },
+    {
+      "@id": "cards/C03-nhdf-hd106-conserved-sites-proportions.md",
+      "@type": "File",
+      "name": "C03: Conserved m6A sites show higher predicted proportions in HD10.6 vs NHDF",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "f65b386019cb46adb09b5809733330be1129e47943d0010c4c4ec022afe4a7aa"
+    },
+    {
+      "@id": "cards/C04-isoform-resolved-m6a-drs.md",
+      "@type": "File",
+      "name": "C04: Long-read DRS resolves isoform-specific m6A profiles missed by GLORI",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "a752e30bc5d0fcb29b10a6a57bfeb194ece6314a651d45c6696391b1e8528e4f"
+    },
+    {
+      "@id": "cards/C05-non-drach-artefacts-and-writers.md",
+      "@type": "File",
+      "name": "C05: Non-DRACH Dorado calls mix basecalling artefacts with plausible writers",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "sha256": "35e71d840c7f05b8d9cabb71dc67a67f4b4d40886d95ae689d496679c8ad1ed1"
+    },
+    {
+      "@id": "cards/M01-cell-culture-stm2457-viability-rna.md",
+      "@type": "File",
+      "name": "M01: Cell models, STM2457 perturbation, viability assay, and matched-input RNA",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "dd7366aa3451ad06e18a4881b9fd0a93b0e197fed9c3a9770aa0eeda42e568e4"
+    },
+    {
+      "@id": "cards/M02-dorado-basecalling-alignment-modkit.md",
+      "@type": "File",
+      "name": "M02: Dorado SQK-RNA004 basecalling, Remora models, alignment, and Modkit pileup",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "5b54a9490f6a520750d90261c9f8425bc006a325eaa193b0d1ae7a2ee64d5e0c"
+    },
+    {
+      "@id": "cards/M03-pelt-calibration-and-subsampling.md",
+      "@type": "File",
+      "name": "M03: Two-stage PELT change-point calibration and subsampled background ratio",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "535f5321cdeb0863e5ffd222866de7209998f8b514c95bc62c0b03c6cc34cffc"
+    },
+    {
+      "@id": "cards/M04-glori-protocol-and-comparison-filters.md",
+      "@type": "File",
+      "name": "M04: Matched-input GLORI chemistry, Snakemake workflow, and comparison filters",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "sha256": "45bde8ea1883a8fc28a507af70a70fadf3526fec54e381491f4cdc3749529ec8"
+    },
+    {
+      "@id": "cards/D01-dorado-read-stats-and-accessions.md",
+      "@type": "File",
+      "name": "D01: Dorado read/alignment statistics, denominators, and data/code accessions",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "sha256": "75c5b23093dc3f1cee4b7bb93518bad103a8d9c72be28141f0512ac6e4308fc3"
+    },
+    {
+      "@id": "cards/D02-supp2-site-counts-matrix.md",
+      "@type": "File",
+      "name": "D02: Filtered vs unfiltered site counts across samples, versions, mods, and IVT",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "sha256": "7a76d3105077d62539828c99162490ab5115973008ea3925bf37a9ea3977e38a"
+    },
+    {
+      "@id": "cards/D03-glori-stats-and-spen-isoforms.md",
+      "@type": "File",
+      "name": "D03: GLORI read/conversion metrics and SPEN isoform coverage table",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "sha256": "55104a30a0b0b8e6f8134cfa3aad13c6b0bb7892ccf6eda0e52b4fe0c404ce72"
+    },
+    {
+      "@id": "cards/Q01-no-biological-replicates-unvalidated-biology.md",
+      "@type": "File",
+      "name": "Q01: Absence of biological replicates and unvalidated biological/isoform claims",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "934115e449887cf2b7d7c6f70e90992c304b7d358d503b54e809b3360306a4e7"
+    },
+    {
+      "@id": "cards/Q02-glori-bias-and-fig3d-directionality.md",
+      "@type": "File",
+      "name": "Q02: GLORI conversion bias, unresolved method differences, and Fig 3D directionality",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "510e79c40d57ca67792d0ed7bf9a407501487ba80f05df86ae6d1a9ef65c8cbb"
+    },
+    {
+      "@id": "cards/Q03-non-m6a-background-mismatches-crossreactivity.md",
+      "@type": "File",
+      "name": "Q03: High Ψ/I background, m5C failure, basecall mismatches, and cross-reactivity",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "20e68be7b5aca144dec116ecfec8e05983bf84269b6d4eb0a04c84e18e2acb1c"
+    },
+    {
+      "@id": "cards/Q04-threshold-subjectivity-and-vor-inconsistencies.md",
+      "@type": "File",
+      "name": "Q04: Threshold subjectivity, background-ratio semantics, and residual VOR mismatches",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "sha256": "72675cc4fcca1e9b7890522136795663fda60cf6eed5dfa5b7e6c426e1d11ede"
+    },
+    {
+      "@id": "cards/U01-peer-review-dispositions-and-claim-moderation.md",
+      "@type": "File",
+      "name": "U01: Peer-review dispositions tempering GLORI, isoform, non-DRACH, and cell-type claims",
+      "additionalType": "review_disposition",
+      "encodingFormat": "text/markdown",
+      "sha256": "73206c0555befd8e13070667010dc9795ed6db2f2baa36563a1186b0b00bf5a0"
+    },
+    {
+      "@id": "cards/U02-preprint-to-vor-methodological-upgrades.md",
+      "@type": "File",
+      "name": "U02: Preprint-to-VOR methodological upgrades: PELT calibration, mismatches, and terminology",
+      "additionalType": "update",
+      "encodingFormat": "text/markdown",
+      "sha256": "bdaa0939f3644bcd816efd26d34c2cb72c3e05ceeda8f6032623e2fec633d756"
+    },
+    {
+      "@id": "source:elife_assessment_and_versions",
+      "@type": "File",
+      "name": "eLife Assessment and Version History",
+      "additionalType": "peer_review_assessment",
+      "sha256": "12de6aec05cc02f52c1b78971076ae672e8bd983ff18ff29036141c6b294c686",
+      "contentSize": "1310"
+    },
+    {
+      "@id": "source:public_reviews",
+      "@type": "File",
+      "name": "Public Peer Reviews (2 reviewers)",
+      "additionalType": "peer_review",
+      "sha256": "18bc2b34ad240e9487341b942e729be01d558cf5a300774f363f06f98b9bfc62",
+      "contentSize": "2107"
+    },
+    {
+      "@id": "source:author_response",
+      "@type": "File",
+      "name": "Point-by-Point Author Response to Peer Review",
+      "additionalType": "author_response",
+      "sha256": "69588a668401292e22ef6039397377e0b508e71de8f96920c1c0a9b68b7a85f1",
+      "contentSize": "11308"
+    },
+    {
+      "@id": "source:supp1_s1_Tabelle1",
+      "@type": "File",
+      "name": "Supplementary file 1 — Sheet 'Tabelle1' (elife-110672-supp1-v1.xlsx, 18 rows)",
+      "additionalType": "data_table",
+      "sha256": "0ab09557308747eb8d3b652fde6467a4aed6c16a674b1864c7aa807f2538d7f4",
+      "contentSize": "2825"
+    },
+    {
+      "@id": "source:supp2_s1_Sheet1",
+      "@type": "File",
+      "name": "Supplementary file 2 — Sheet 'Sheet1' (elife-110672-supp2-v1.xlsx, 138 rows)",
+      "additionalType": "data_table",
+      "sha256": "f475e549fd6479bf0f351adb19b4c6035782122a09e9abf1e5b98d5bc2879b52",
+      "contentSize": "8349"
+    },
+    {
+      "@id": "source:supp3_s1_Sheet1",
+      "@type": "File",
+      "name": "Supplementary file 3 — Sheet 'Sheet1' (elife-110672-supp3-v1.xlsx, 5 rows)",
+      "additionalType": "data_table",
+      "sha256": "c2726ad8bac2fea87d52626bb54c4557140f85506f48a28b344b402e78feb4df",
+      "contentSize": "324"
+    },
+    {
+      "@id": "source:supp4_s1_Dorado_SPEN_isoforms",
+      "@type": "File",
+      "name": "Supplementary file 4 — Sheet 'Dorado_SPEN_isoforms' (elife-110672-supp4-v1.xlsx, 6 rows)",
+      "additionalType": "data_table",
+      "sha256": "48886dcda0352b3dd11faf8c78a3b5624a03edf9b21e01200e9f38b49da8617b",
+      "contentSize": "416"
+    },
+    {
+      "@id": "source:mdar",
+      "@type": "File",
+      "name": "MDAR checklist (elife-110672-mdarchecklist1-v1.docx)",
+      "additionalType": "checklist",
+      "sha256": "125069b7cdb8f901c207c89a979dca4be668ce8b81cab0f9cb46f883ad55b406",
+      "contentSize": "10649"
+    }
+  ]
+}

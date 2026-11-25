@@ -1,0 +1,61 @@
+{
+  "paper_id": "pdrp-design-science-2026",
+  "title": "The Progressive-Disclosure Research Protocol (PDRP): Designing Layered Context for AI-Assisted Academic Reading and Interrogation",
+  "authors": [
+    "Atticus Sims"
+  ],
+  "orcid": "0009-0009-2933-2344",
+  "venue_target": "Design Science (Cambridge University Press / The Design Society)",
+  "protocol_specification": "PDRP Cycle 2 (v3.1)",
+  "date_frozen": "2026-11-25",
+  "license": "CC-BY-4.0",
+  "article": {
+    "filename": "article.txt",
+    "relpath": "article.txt",
+    "bytes": 75192,
+    "lines": 449,
+    "sha256": "ff4b70d5710c4e92ccc519bbb0c14437f96030990f5bb3904a51fb2bfec25538"
+  },
+  "sources": [
+    {
+      "source_id": "supplement_s1",
+      "role": "supplement",
+      "title": "Online Supplement S1 (Protocol Spec, Worked Specimen, Tables S1-S5, Audit Log)",
+      "filename": "supplement_s1.txt",
+      "relpath": "sources/supplement_s1.txt",
+      "bytes": 23264,
+      "lines": 195,
+      "sha256": "1e417f5c151fdde5a779c2d96dfc1139f205a1d9bd6f822f0f8d137a02d05c33"
+    },
+    {
+      "source_id": "human_validation_report",
+      "role": "validation_report",
+      "title": "Human Validation & Blinded Judge Calibration Report (68/68 crate audit + 180/180 calibration)",
+      "filename": "human_validation_report.txt",
+      "relpath": "sources/human_validation_report.txt",
+      "bytes": 2682,
+      "lines": 28,
+      "sha256": "7237c15daf896f5f1e9194b04cc551d3eef3eb87fba946c04f735bf3c20afb5b"
+    },
+    {
+      "source_id": "reasoning_ablation_report",
+      "role": "ablation_report",
+      "title": "Within-Weight Bidirectional Reasoning Toggle Report (n=576 isolated trials)",
+      "filename": "reasoning_ablation_report.txt",
+      "relpath": "sources/reasoning_ablation_report.txt",
+      "bytes": 2134,
+      "lines": 20,
+      "sha256": "71f8d5cc8cfd5e22664fb0cbbbe6b0427c5af4d0f143c3a9cbc4490f14880f4b"
+    },
+    {
+      "source_id": "results_report",
+      "role": "benchmark_report",
+      "title": "Main Benchmark Statistical Results Report (N=2,304 trials)",
+      "filename": "results_report.txt",
+      "relpath": "sources/results_report.txt",
+      "bytes": 15234,
+      "lines": 147,
+      "sha256": "8d2cf377d6c2fb2f732956bf5e7d88c86f9f69b5b4c4cb6e4fa620b3101c5182"
+    }
+  ]
+}

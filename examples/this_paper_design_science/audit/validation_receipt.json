@@ -1,0 +1,12 @@
+{
+  "crate": "pdrp-design-science-2026",
+  "passed": true,
+  "manifest_bytes": 2216,
+  "manifest_cap_bytes": 2500,
+  "card_count": 15,
+  "verified_sha256_files": 22,
+  "error_count": 0,
+  "warning_count": 0,
+  "errors": [],
+  "warnings": []
+}

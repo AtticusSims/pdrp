@@ -1,0 +1,20 @@
+# Reasoning On/Off Within-Weight Ablation Results
+
+- **Scored ablation trials:** 576 / 576
+- **Inter-judge agreement (`z-ai/glm-5.3` vs `moonshotai/kimi-k2.5`):** Clean-success Cohen's **κ = 0.7459**
+
+## 1. Within-Weight Comparison: Native Reasoning vs. Opposite Reasoning Arm
+| Model | Reasoning Mode | `raw_supplements` | `companion_v3` | `companion_v3_1` | `v3` vs `raw` Δ (p) | `v3.1` vs `raw` Δ (p) | Stratum-C 0-Tool (`v3 → v3.1`) | Med. Tokens (`raw` / `v3` / `v3.1`) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `deepseek/deepseek-v3.2` | OFF (default r_tok=0) | **54.7%** | **70.3%** | **54.7%** | +15.6 pp (0.0309) | +0.0 pp (1) | 1 → 15/16 | 127,013 / 158,505 / 30,458 |
+| `deepseek/deepseek-v3.2` | ON (effort=medium) | **60.9%** | **65.6%** | **73.4%** | +4.7 pp (0.581) | +12.5 pp (0.0386) | 0 → 0/16 | 197,083 / 144,096 / 143,606 |
+| `qwen3.8:27b-q4_K_M` | ON (default think=True) | **78.1%** | **76.6%** | **79.7%** | -1.6 pp (1) | +1.6 pp (1) | 0 → 4/16 | 52,859 / 58,430 / 71,929 |
+| `qwen3.8:27b-q4_K_M` | OFF (think=False) | **67.2%** | **76.6%** | **89.1%** | +9.4 pp (0.238) | +21.9 pp (0.00131) | 0 → 0/16 | 73,073 / 70,476 / 81,519 |
+| `gpt-oss:20b` | Medium (default) | **37.5%** | **46.9%** | **39.1%** | +9.4 pp (0.18) | +1.6 pp (1) | 6 → 3/16 | 83,028 / 65,469 / 76,947 |
+| `gpt-oss:20b` | Low (think='low') | **40.6%** | **35.9%** | **40.6%** | -4.7 pp (0.607) | +0.0 pp (1) | 11 → 9/16 | 43,766 / 40,318 / 42,437 |
+
+## 2. Pooled Within-Weight 2×3 Reasoning Interaction (All 3 Models, n=192 Pairs/Cell)
+| Reasoning Regime | `raw_supplements` | `companion_v3` | `companion_v3_1` | `v3` vs `raw` (McNemar p) | `v3.1` vs `raw` (McNemar p) | `D_abstention` (`raw` vs `v3` vs `v3.1`) |
+|---|---:|---:|---:|---:|---:|---:|
+| **Reasoning ON / Higher** (n=192) | **58.9%** | **63.0%** | **64.1%** | **+4.2 pp** (+23/-15, *p*=0.2559) | **+5.2 pp** (+24/-14, *p*=0.1433) | 62.5% vs 79.2% vs 79.2% |
+| **Reasoning OFF / Lower** (n=192) | **54.2%** | **60.9%** | **61.5%** | **+6.8 pp** (+32/-19, *p*=0.09191) | **+7.3 pp** (+29/-15, *p*=0.04877) | 50.0% vs 66.7% vs 70.8% |

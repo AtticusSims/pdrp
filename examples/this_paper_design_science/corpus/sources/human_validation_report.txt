@@ -1,0 +1,28 @@
+# Human Validation & Judge Calibration Report
+
+## 1. Timed Author Crate Audit
+| Paper | Reviewed | Approved | Minor Edit | Substantive Error | Review Time (min) |
+|---|---:|---:|---:|---:|---:|
+| `digital-creativity` | 18 | 17 | 1 | 0 | 17.4 |
+| `jcal-review` | 16 | 16 | 0 | 0 | 12.6 |
+| `elife-111304` | 16 | 15 | 1 | 0 | 0.0 |
+| `elife-110672` | 18 | 16 | 2 | 0 | 0.0 |
+
+## 2. Blinded Human–AI Judge Calibration
+- **Human-scored blind items:** 180 (stratified 50/50: 90 AI-unanimous + 90 AI-disagreement items, deliberately oversampling disagreements 6.5× relative to their 7.7% true prevalence in N=2304)
+- **Unanimous AI Stratum (92.3% of benchmark, n=90 sampled):** **93.3%** exact Human–AI agreement, Cohen's **κ = 0.8338** (AI-pass precision 95.4%, AI-fail agreement 88.0%).
+- **AI-Disagreement Stratum (7.7% of benchmark, n=90 sampled):** Human scored **82.2%** as Clean Success (confirming strict AND-consensus is conservative on disputes; Human agreed with GLM-5.3 on 83.8% of GLM=1/Kimi=0 disputes and with Kimi-K2.5 on 75.0% of GLM=0/Kimi=1 disputes).
+- **Post-Stratified (Population-Weighted) Calibration across Full N=2304:**
+  - **2-Judge Strict Consensus:** **87.4%** agreement, **κ = 0.7095** (projected Human 72.0% vs. Consensus 65.5%).
+  - **Judge A (`z-ai/glm-5.3`):** **91.6%** agreement, **κ = 0.7936** (projected Human 72.0% vs. GLM-5.3 71.7%, −0.3 pp bias).
+  - **Judge B (`moonshotai/kimi-k2.5`):** **88.2%** agreement, **κ = 0.7225**.
+- **Unweighted Disagreement-Oversampled Raw Totals (n=180):** Consensus κ = 0.2279 (55.6% agree) | Judge A (`GLM-5.3`) κ = 0.5262 (83.3% agree) | Judge B (`Kimi-K2.5`) κ = 0.2413 (60.0% agree) | Overclaim κ = 0.2151 | Hallucination κ = 0.188.
+- **Differential Condition Bias (Companion v3/v3.1 vs. Raw Supplements):** Zero bias favoring companions — Consensus AI-lenient errors `companion=2/72 (2.8%)` vs `raw=1/46 (2.2%)` (Fisher exact *p* = **1.0000**); AI-strict errors `companion=32/72` vs `raw=25/46` (*p* = **0.3467**). Judge A (`GLM-5.3`) AI-lenient `companion=8/72 (11.1%)` vs `raw=5/46 (10.9%)` (*p* = **1.0000**); AI-strict `companion=7/72 (9.7%)` vs `raw=5/46 (10.9%)` (*p* = **1.0000**).
+
+| Condition (Disagreement-Enriched Sample) | n | Human Clean | AI Consensus Clean | AI − Human Bias | Human–AI Agree |
+|---|---:|---:|---:|---:|---:|
+| `paper_only` | 36 | **58.3%** | 30.6% | -27.8 pp | 72.2% |
+| `raw_supplements` | 46 | **84.8%** | 32.6% | -52.2 pp | 43.5% |
+| `companion_v3` | 47 | **80.9%** | 34.0% | -46.8 pp | 44.7% |
+| `companion_v3_1` | 25 | **68.0%** | 36.0% | -32.0 pp | 68.0% |
+| `naive_preload` | 26 | **92.3%** | 53.8% | -38.5 pp | 61.5% |

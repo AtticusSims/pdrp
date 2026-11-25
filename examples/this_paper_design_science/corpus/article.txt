@@ -1,0 +1,449 @@
+# The Progressive-Disclosure Research Protocol (PDRP): Designing Layered Context for AI-Assisted Academic Reading and Interrogation
+
+**Article Type:** Research Article (*Design Science*, Cambridge University Press / The Design Society)  
+**Date:** 25 November 2026  
+**Author:** Atticus Sims (ORCID: 0009-0009-2933-2344)  
+**Affiliation:** Department of Visual Communication Design, Faculty of Design, University of Macau, Macau, China  
+**Correspondence:** atticussims@um.edu.mo
+
+---
+
+## Abstract
+
+Artificial intelligence assistants increasingly read and interrogate academic articles and methodological protocols, yet decisive procedures, analytical caveats, review revisions, and negative findings remain scattered across supplementary archives. Neither supplying a manuscript alone nor preloading entire supplementary bundles supports reliable verification. Adopting a design science methodology, this article investigates how to design an information disclosure protocol that governs machine reading without altering primary scholarly prose. We specify a progressive disclosure protocol pairing a compact entry manifest (under 2.5 kilobytes) that declares absent evidence, atomic evidence cards with automated qualification linking, and direct escalation to frozen primary files. Across two design cycles spanning four multidisciplinary studies, eight cloud and local models, and 2,880 blinded trials, verified answer accuracy under the refined protocol exceeds reading a manuscript alone by 35.9 percentage points. Against strong text search, overall accuracy remains near parity (+2.9 percentage points), while durable gains emerge on unanswerable abstention (+12.5 percentage points with nearly one third fewer tokens) and deliberative cloud models (+5.6 percentage points). Token usage drops on complex archives yet rises on tiny tabular supplements. Telemetry and reasoning toggle tests expose two hazards: premature stopping at summaries (compression substitution) and fragile prompt bypass gates across architectures. Author verification audits and 180 blinded calibration ratings ground five empirically bounded design principles for academic publishing.
+
+**Keywords:** academic publishing; design research methodology; protocol design; RO-Crate; large language models
+
+---
+
+## 1. Introduction
+
+Academic publishing is entering a period in which the audience for a research record is no longer exclusively human. Alongside peer reviewers and domain scholars, large language models and tool-using artificial intelligence assistants routinely read manuscripts, extract experimental protocols, check statistical bounds, and synthesize cross-study evidence (Papalambros *et al.* 2026; Miao *et al.* 2026). In a *Design Science* discussion among eleven design journal editors, Papalambros *et al.* (2026) observed that artificial intelligence offers substantial leverage across research workflows yet strains epistemic verification, provenance, and authorial accountability. At stake is a foundational design science question: how should complex scholarly records be structured and mediated so that automated reading remains faithful to underlying evidence rather than flattening caveats or inventing unsupported claims?
+
+From the perspective of design science—the rigorous study of creating artifacts and embedding them within physical, virtual, psychological, and social environments (Papalambros 2015; Papalambros *et al.* 2025)—this verification problem stems from an architectural mismatch between how scholarship is archived and how computational agents interrogate it. Empirical and methodological studies are rarely self-contained. Crucial experimental parameters, raw tables, sensitivity checks, peer-review exchanges, methodological checklists, and post-submission updates reside across dozens of supplementary files. Reading the main article alone confronts an evidentiary void that provokes unwarranted abstention or plausible fabrication. Conversely, preloading entire supplementary archives into a context window incurs steep token costs and degrades recall across buried clauses (Liu *et al.* 2024; Li *et al.* 2024).
+
+Recent proposals for machine-readable research outputs—including Agent-Native Research Artifacts (Liu, Jiachen *et al.* 2026), the Agentic Publication Protocol (Lu & Qi 2026), Knows (Yu & Wang 2026), Structured Paper Representation for Agents (Leng *et al.* 2026), and executable wrappers such as Paper2Agent (Miao *et al.* 2026)—signal rapid momentum toward restructuring scholarship. Yet most treat the challenge primarily as a *data-format* problem, emphasizing new schemas while paying less attention to the *interaction protocol* governing how an assistant discovers, sequences, verifies, and bounds evidence. Existing evaluations also rarely benchmark structured companions against strong full-text search over untouched supplements, seldom separate staged disclosure from naive context preloading, and rarely examine how protocol rules behave across local open-weight models or differing inference-time reasoning modes.
+
+We therefore frame AI-assisted academic reading and interrogation explicitly as a **protocol design problem**. Grounding our work in Blessing & Chakrabarti's (2009) Design Research Methodology and Gericke, Eckert & Stacey's (2022) framework for describing design methods, we treat a research companion not as a replacement for human prose, but as an *information-disclosure protocol* mediating an immutable primary archive. Designing such a protocol requires balancing three socio-technical tensions: evidentiary completeness against context dilution, concise routing against premature stopping, and procedural efficiency against accidental omission of caveats.
+
+Three research questions guide our investigation:
+
+1. **RQ1 (Protocol Efficacy and Efficiency):** How does a lightweight, progressive-disclosure protocol affect verified answer accuracy, qualification fidelity, abstention calibration, and token efficiency relative to manuscript-only reading, strong probabilistic text search, and full-card preloading?
+2. **RQ2 (Trade-Offs and Boundary Conditions):** How do archive scale, disciplinary genre, and reader-model architecture shape protocol performance, and what failure mechanisms arise when summaries mediate primary evidence?
+3. **RQ3 (Protocol Rules and Agent Deliberation):** How does toggling explicit inference-time reasoning within identical model weights causally affect adherence to conditional disclosure gates and qualification safeguards?
+
+Across two controlled design–evaluate–redesign cycles, a within-weight reasoning experiment, timed authoring audits, and blinded human calibration spanning four multidisciplinary studies, our contribution is twofold. First, we specify and evaluate a reusable three-layer **Progressive-Disclosure Research Protocol (PDRP)** packaged within the open Research Object Crate standard (Sefton *et al.* 2026). Second, we derive **five empirically bounded design principles** clarifying where structured disclosure improves verification, where simpler retrieval suffices, and why conditional bypass rules cannot be entrusted safely to prompt prose across heterogeneous agents.
+
+Section 2 reviews theoretical foundations and related frameworks; Section 3 specifies PDRP requirements, method elements, and Cycle 2 redesign; Section 4 details the testbed and validation design; Section 5 reports empirical findings; Section 6 synthesizes design principles, governance, and limitations; and Section 7 concludes.
+
+---
+
+## 2. Theoretical Background and Related Work
+
+### 2.1 Design Science, Method Artifacts, and Communication Design
+
+Design science studies both how artifacts are conceived and how they function within socio-technical systems (Simon 2019; Papalambros 2015). Reflecting on a decade of the journal, Papalambros *et al.* (2025) emphasize that durable contributions unite rigorous artifact creation with explicit theoretical grounding and empirical evaluation across disciplines. Blessing & Chakrabarti (2009) structure this link through the Design Research Methodology (DRM): *Research Clarification*, *Descriptive Study I* (diagnosing failures in current practice), *Prescriptive Study* (developing a targeted support artifact), and *Descriptive Study II* (evaluating and refining the artifact). Complementing this lifecycle, Cash (2018) stresses that design research builds cumulative theory when empirical studies test causal mechanisms rather than merely demonstrating a single prototype.
+
+When the designed artifact is a method or protocol rather than a physical device, *Design Science* scholarship imposes clear descriptive obligations. Gericke, Eckert & Stacey (2022) argue that any design method should specify its intended purpose, representational form, procedural steps, required actor roles, and contextual boundaries. Efeoğlu & Møller (2023) demonstrate that iterative workflow redesign must track both task outcomes and practical usability burdens, while Bobbe *et al.* (2023) show that communication artifacts succeed only when they bridge mismatched knowledge bases without overwhelming recipients. Parallel information-systems work frames iterative artifact evaluation and bounded generalization as nascent design theory (Hevner *et al.* 2004; Peffers *et al.* 2007; Gregor & Hevner 2013), while research-through-design underscores learning openly from concrete design breakdowns (Zimmerman *et al.* 2007; Gaver 2012).
+
+### 2.2 Progressive Disclosure, Forcing Functions, and Human-to-Agent Divergence
+
+Designing protocols for AI-assisted interrogation requires managing attentional bandwidth without losing epistemic rigor. In human–computer interaction, Shneiderman (1996) articulated the classic principle of *overview first, zoom and filter, then details on demand*. In explainable artificial intelligence, Springer & Whittaker (2019) demonstrated empirically that **progressive disclosure**—exposing concise orientation upfront while deferring granular evidence until requested—reduces cognitive overload while preserving auditability. Equally foundational is Norman's (2013) concept of **forcing functions**: structural interface constraints that prevent critical safety steps from being skipped through haste.
+
+Empirical studies of large language models reveal an important theoretical boundary: human interaction principles transfer only partially to computational readers. On the transfer side, concatenating large archives into a single prompt induces "lost in the middle" degradation, causing models to overlook buried clauses away from prompt boundaries (Liu *et al.* 2024; Li *et al.* 2024). Staged overview layers therefore mitigate dilution for both humans and machines. On the divergence side, human readers experience physical reading friction that motivates selective checking, whereas tool-using language models exhibit acute sensitivity to conditional prompt phrasing (Sclar *et al.* 2024) and often treat polished intermediate summaries as complete answer templates rather than navigation pointers—a failure mode we diagnose below as **compression substitution**.
+
+Recent *Design Science* studies of LLMs in requirements engineering (Norheim *et al.* 2024), analogical ideation (Kokate & Onkar 2026), pattern-language operations (Tanaka *et al.* 2026), novice design workflows (Krajcer *et al.* 2026), and structured patent knowledge extraction (Siddharth & Luo 2026) reinforce this boundary: unconstrained LLM use frequently erodes precision and provenance unless scaffolded by explicit structural representations and deterministic protocols. Extending Shneiderman (1996), Springer & Whittaker (2019), and Norman (2013) to machine reading therefore demands software-enforced safeguards rather than soft prose instructions alone.
+
+### 2.3 Compound Scholarly Objects and AI-Readable Research Artifacts
+
+Efforts to augment papers with machine-readable structure span more than two decades. Van de Sompel *et al.* (2004) proposed compound scholarly units combining prose, datasets, and provenance. Semantic publishing formalized claim–evidence graphs via Micropublications (Clark *et al.* 2014) and W3C PROV-O provenance (Lebo *et al.* 2013), while Living Papers demonstrated compiled toolkits augmenting manuscripts with interactive views without sacrificing prose readability (Heer *et al.* 2023). In open science, **Research Object Crate (RO-Crate)** emerged as a lightweight JSON-LD standard packaging immutable primary files alongside machine-actionable contextual metadata and cryptographic checksums (Sefton *et al.* 2026).
+
+Recent agent-oriented proposals extend this lineage. Paper2Agent wraps articles and codebases into interactive Model Context Protocol servers for direct analytical execution (Miao *et al.* 2026). Agent-Native Research Artifacts (Liu, Jiachen *et al.* 2026), the Agentic Publication Protocol (Lu & Qi 2026), Knows (Yu & Wang 2026), and SPRA (Leng *et al.* 2026) explore machine-oriented paper schemas for autonomous consumption, while retrieval-augmented generation research links representation structure to multi-step reasoning (Li *et al.* 2025) and citation grounding (Gao *et al.* 2023).
+
+**Table 1.** Positioning of the Progressive-Disclosure Research Protocol (PDRP) relative to prior scholarly packaging and AI-reading frameworks.
+
+| Framework or Standard | Primary Approach | Immutable Primary Archive | Explicit Absence Map | Software Caveat Binding | Benchmarked vs. BM25 & Preload | Reasoning & Human Controls |
+|---|---|:---:|:---:|:---:|:---:|:---:|
+| Micropublications (Clark *et al.* 2014) | RDF claim–evidence graph | External links | No | Ontology-level | No | No |
+| Living Papers (Heer *et al.* 2023) | Compiled interactive paper | Partial | No | No | Human UX focus | No |
+| RO-Crate (Sefton *et al.* 2026) | JSON-LD metadata crate | Yes | No | No | Spec only | No |
+| Paper2Agent (Miao *et al.* 2026) | Executable MCP wrapper | Code wrapper | No | No | Execution focus | No |
+| ANRA, APP, Knows, SPRA (2026) | Agent-native schemas | Varies | Implicit | Prompt-level | Limited | No ON/OFF toggle |
+| **This Study (PDRP)** | **3-layer RO-Crate protocol** | **Yes** | **Yes** | **Yes (forcing function)** | **Yes** | **Yes (ON/OFF + human)** |
+
+Four methodological gaps stand out in Table 1. First, structured companions are seldom benchmarked against strong probabilistic search such as Okapi BM25 (Robertson & Zaragoza 2009) over untouched supplements. Second, preloading structured cards confounds representation with context injection. Third, testing older articles invites pretraining memorization, while overlapping author and judge families invites self-preference bias (Zheng *et al.* 2023; Panickssery *et al.* 2024). Fourth, few studies test local open-weight models or inference-time reasoning controls. These four gaps shape the protocol design and evaluation below.
+
+---
+
+## 3. Protocol Design: Requirements, Architecture, and Iterative Redesign
+
+Following Gericke, Eckert & Stacey (2022), Table 2 separates PDRP's two coupled artifacts—the *Runtime Disclosure Protocol* governing machine reading and the *Pre-Publication Authoring Workflow* governing preparation—across method-description elements. Complete technical schemas, verbatim excerpts, and tool interfaces reside in Online Supplement S1.
+
+**Table 2.** Specification of the designed artifacts mapped to Gericke, Eckert & Stacey's (2022) elements of a design method.
+
+| Method Element | Artifact 1: Runtime Disclosure Protocol | Artifact 2: Pre-Publication Authoring Workflow |
+|---|---|---|
+| **Purpose** | Guide AI assistants to retrieve procedures, caveats, and absences faithfully without altering prose | Let researchers prepare and verify trustworthy companions with minimal editorial burden |
+| **Representation** | Three-layer RO-Crate: bounded entry manifest (<2.5 KB), 16–18 atomic cards, frozen archive | Line-anchored card templates, SHA-256 provenance manifest, side-by-side audit checklists |
+| **Procedure** | Overview-to-card-to-source escalation, software caveat bundling, span cues, bounded absence checks | Isolated AI drafting → deterministic schema validator → cross-family audit → human sign-off |
+| **Actor Roles** | Cloud or local AI reader, deterministic retrieval server, immutable archive host | Isolated drafting agent, mechanical validator, independent auditing agent, accountable human author |
+| **Boundaries** | Strongest on multi-file archives (>100 KB) and incomplete records; overhead on tiny tabular bundles | Requires explicit human verification on derived cards; never autonomous publication |
+
+### 3.1 Diagnostic Insights from Preliminary Prototyping (Descriptive Study I)
+
+Before the main study, an exploratory situated prototype on two internal manuscripts (retained separately and never pooled below) surfaced three design failures. First, **artifact bloat discouraged uptake**: early companion files exceeded 50–100 kilobytes of caveats, causing local models to ignore them when the main article was already loaded. Second, **brittle lexical baselines distorted comparisons**: naive substring matching returned zero hits on roughly two-thirds of multi-word queries, artificially depressing raw-archive accuracy. Third, **passive prose links failed to enforce caveats**: Markdown cross-references let assistants read an affirmative claim card and answer immediately without opening linked methodological limitations.
+
+### 3.2 Design Requirements, Three-Layer Architecture, and Specimen (Prescriptive Study I)
+
+Translating those diagnostics into formal specifications produced four Design Requirements. **Primary authority and minimal entry footprint (DR1)** keeps the main article and all supplementary files untouched with cryptographic checksums while capping the preloaded entry manifest so it never crowds out primary prose. **Explicit absence declaration (DR2)** declares verified archival gaps upfront to curb fabrication and redundant searches. **Software-enforced qualification binding (DR3)** operationalizes caveats as a retrieval-boundary forcing function (Norman 2013) rather than voluntary link-following. **Retrieval parity and progressive escalation (DR4)** provides identical probabilistic search and bounded primary-line reading across raw and companion arms so cards function strictly as verifiable routing anchors.
+
+We implemented DR1–DR4 as a three-layer architecture conforming to the RO-Crate 1.1 JSON-LD profile, forward-compatible with RO-Crate 1.3 (Sefton *et al.* 2026; Figure 1, Panel A).
+
+![Progressive-Disclosure Research Protocol three-layer architecture and two-cycle DRM workflow](figures/fig1_architecture_dsr.png)
+
+**Figure 1.** Conceptual three-layer architecture of the Progressive-Disclosure Research Protocol (PDRP; Panel A) and its two-cycle Design Research Methodology authoring, evaluation, telemetry-diagnosis, and redesign workflow (Panel B).
+
+**Layer 0 (Compact Entry Manifest)** pairs the preloaded article with a concise Markdown manifest strictly under 2.5 kilobytes (roughly 600 tokens). Following Shneiderman's (1996) overview-first rule, it provides a brief scope header, a **Negative-Coverage Map** enumerating records verified absent from the archive, and a flat one-line directory grouped into five families (Claims, Methods, Data, Qualifications, and Updates), backed by RO-Crate SHA-256 hashes for every Layer-2 file.
+
+**Layer 1 (Atomic Evidence Cards)** decomposes supplementary and cross-cutting evidence into 16–18 concise cards (140–320 words each) free of boilerplate prose. Each card cites exact primary line ranges and encodes six typed relations (*supported by*, *qualified by*, *contradicted by*, *depends on*, *superseded by*, and *answers review*). Whenever an assistant opens a claim, method, or data card, the retrieval server traverses bidirectional graph edges and automatically bundles linked Qualification and Update cards into the same tool response.
+
+**Layer 2 (Immutable Primary Archive)** leaves the manuscript, data tables, peer reviews, author responses, and checklists untouched. Both raw-archive and companion conditions share identical Layer-2 access tools: calibrated Okapi BM25 search (Robertson & Zaragoza 2009) over overlapping line windows paired with bounded line-range reading. Upgrading to Okapi BM25 slashed zero-hit searches from roughly two-thirds in preliminary work to just 1.5% across the full benchmark.
+
+**Worked Artifact Specimen.** On the open-access *Hippocampal Ripples (eLife)* study (Liu, Jing *et al.* 2026; verbatim excerpts in Online Supplement S1, Section S1.2), the 2,319-byte entry manifest declares upfront that raw intracranial traces, healthy controls, saccades, and per-patient medication logs are absent, while flagging four extra reviewer controls stored only in the author response. When an assistant opens Claim Card `C02` summarizing hippocampal ripple ramping, the retrieval server automatically bundles Qualification Card `Q01` into the same response, immediately exposing three caveats buried across the methodological checklist, public reviews, and author response: a clinical epilepsy cohort without healthy controls, non-significant separation from broadband high-frequency activity, and a declined amygdala–entorhinal control. In Cycle 2, an appended verification footer nudges direct primary-line inspection of those short spans before quoting exact clauses.
+
+### 3.3 Pre-Publication Authoring and Telemetry-Driven Redesign (Prescriptive Study II)
+
+Preparation followed four sequential quality gates (Figure 1, Panel B, Stage 1). An isolated drafting agent (Gemini 4 Neon) compiled each companion solely from frozen Layer-2 files, archiving immutable snapshots. A deterministic validator confirmed manifest size caps, JSON-LD integrity, checksums, line bounds, and link closure across all four crates with zero errors. An independent model (DeepSeek V3.2) audited all 68 cards line-by-line against primary spans, finding zero high-severity errors and proposing five minor precision edits logged by Gemini. Finally, the study's author conducted a side-by-side human audit against highlighted primary spans (Section 5.5).
+
+Following Blessing & Chakrabarti's (2009) iterative loop, Cycle 1 telemetry diagnosed three procedural flaws (Section 5.2): capable agents stopped at card summaries without inspecting brief peer-review letters, opened cards needlessly on self-contained article queries, and ran repeated searches on items already declared absent. To isolate **protocol rules** from **card content**, Cycle 2 held all four archives, all 68 cards, every manifest, and all 64 questions **byte-identical**, changing only three procedural rules:
+
+1. **Article-Sufficiency Gate:** Permitted answering without opening cards *only* when a query was completely self-contained in the preloaded main manuscript and touched no supplementary figures, caveats, or revisions.
+2. **Compact Payloads and Primary-Span Cues:** Stripped redundant metadata headers from card responses (cutting payload size by roughly one-third), tightened automatic co-retrieval to the two highest-priority caveat cards, and appended an automated verification footer whenever a card pointed to a short primary span (80 lines or fewer).
+3. **Bounded Absence Confirmation:** Limited confirmation searches on items flagged absent by the Negative-Coverage Map to at most one targeted BM25 query before clean abstention.
+
+---
+
+## 4. Evaluation Methodology
+
+To evaluate protocol efficacy, boundary conditions, and causal mechanisms across disciplines and model architectures, we combined controlled automated benchmarking with blinded human validation. Complete model identifiers, runtime parameters, and archive-ID mappings appear in Online Supplement S1.
+
+### 4.1 Multidisciplinary Testbed and Zero-Contamination Controls
+
+Design guidance from a single field rarely generalizes (Cash 2018). We assembled four frozen corpora spanning computational design, creative-coding pedagogy, human electrophysiology, and molecular genomics (Table 3). Two are unpublished internal manuscripts spanning divergent scales: *Computational Aesthetics* (60 supplementary files totaling over one megabyte) and *Creative-Coding Review* (a qualitative typology). To eliminate pretraining memorization, the other two are external open-access **Versions of Record published in *eLife* on 20 November 2026**—the day before execution—covering hippocampal ripples (Liu, Jing *et al.* 2026) and nanopore direct RNA calibration (Ohnezeit *et al.* 2026). Supplementary archives thus span an order-of-magnitude gradient from 37 kilobytes to 1.08 megabytes.
+
+**Table 3.** Frozen multidisciplinary benchmark cases and companion protocol artifacts (repository identifiers mapped in Online Supplement S1, Section S1.1).
+
+| Benchmark Case | Disciplinary Domain and Genre | Contamination Control | Article Size | Supplementary Archive | Manifest | Cards |
+|---|---|---|---:|---:|---:|---:|
+| *Computational Aesthetics* | Computational aesthetic evaluation (empirical) | Unpublished internal manuscript | 51.4 KB | 60 files (1.08 MB) | 2,343 B | 18 |
+| *Creative-Coding Review* | AI-assisted creative coding pedagogy (qualitative) | Unpublished internal manuscript | 104.9 KB | 8 files (181 KB) | 2,294 B | 16 |
+| *Hippocampal Ripples (eLife)* | Human electrophysiology (Liu, Jing *et al.* 2026) | *eLife* VOR, 20 Nov 2026 | 82.6 KB | 5 files (125 KB) | 2,319 B | 16 |
+| *Nanopore RNA Calibration (eLife)* | Direct RNA sequencing (Ohnezeit *et al.* 2026) | *eLife* VOR, 20 Nov 2026 | 97.5 KB | 8 files incl. CSVs (37 KB) | 2,280 B | 18 |
+
+### 4.2 Card-Blind Interrogation Tasks and Reader Fleet
+
+To prevent circular question authoring, Grok 4.6 drafted all 64 evaluation questions strictly from raw Layer-2 archives without ever seeing any manifest or evidence card. Because Grok 4.6 also served as one of eight stateless reading subjects and DeepSeek V3.2 served as both card auditor and reader, Section 5.3 explicitly verifies sensitivity excluding both models (Online Supplement S1, Table S4; hereafter all `Table S*` citations refer to Online Supplement S1). Questions balanced evenly across the four studies and four reading obligations (16 each): **article-only comprehension** (self-contained in the main text), **supplementary fact extraction** (values exclusively in supplements), **qualification binding** (main claims requiring caveats located in supplements or peer reviews), and **temporal evolution and unanswerable abstention** (split evenly between eight review-revision questions and eight verified unanswerable queries). Each question carried an immutable rubric of two to four verifiable source-anchored criteria.
+
+Eight reader models spanned six families: five cloud models (Qwen 3.8 Max, Mistral Large 4, open-weight Inkling 2 Small, Grok 4.6, and DeepSeek V3.2) and three local open-weight models running at zero API cost on a single workstation GPU (Qwen 3.8 27B, Gemma 4 31B, and GPT-OSS 20B). Endpoint probing showed that four cloud models enforced mandatory native reasoning whereas DeepSeek V3.2 defaulted to reasoning disabled. Table 4 summarizes the three cumulative experimental phases totaling 2,880 controlled reading trials.
+
+**Table 4.** Cumulative experimental design matrix across Cycle 1, Cycle 2, and the within-weight reasoning experiment (2,880 trials).
+
+| Phase | Reader Models and Scope | Conditions Compared | Trials |
+|---|---|---|---:|
+| **Cycle 1 Main** | All 8 models × 64 questions (4 cases) | Manuscript Only; Raw Full-Text Search (BM25); Cycle 1 Protocol | 1,536 |
+| **Preload Ablation** | All 8 models × 32 questions (2 multi-file cases) | Full-Card Preload (all 16–18 cards concatenated upfront in prompt) | 256 |
+| **Cycle 2 Redesign** | All 8 models × 64 questions (byte-identical cards) | Cycle 2 Protocol (sufficiency gate, compact payloads, span cues, bounded absence) | 512 |
+| **Reasoning Toggle** | 3 clean-switch models × 64 questions (isolated arm) | Raw BM25, Cycle 1 & Cycle 2 with toggled reasoning: DeepSeek (OFF→ON), Qwen 27B (ON→OFF), GPT-OSS (Med→Low) | 576 |
+
+One hardware constraint in the local ablation requires upfront disclosure: to fit Qwen 3.8 27B non-thinking weights inside 32 gigabytes of local GPU memory, its context cap was tightened from 49,152 tokens in the ON arm to 40,960 tokens in the OFF arm, provoking nine local context-overflow HTTP errors under raw search versus two under Cycle 2. Primary totals retain all crashes as failed trials while Section 5.4 and Table S5 report crash-excluded common-valid sensitivity analyses.
+
+### 4.3 Blinded Cross-Family Scoring, Inference, and Human Validation
+
+To prevent self-preference bias (Panickssery *et al.* 2024), all responses were stripped of model names, condition tags, tool traces, and token counts before grading. Two independent zero-overlap judges—**GLM-5.3** (Judge A) and **Kimi-K2.5** (Judge B)—evaluated all 2,880 responses across 5,760 API calls with zero errors, scoring every atomic rubric item alongside binary flags for overclaiming, hallucination, wrong abstention, and grounded citation. Our primary outcome is **Strict Consensus Clean Success**, requiring both judges to verify every rubric item with zero error flags. Inter-judge reliability was substantial to almost perfect (Landis & Koch 1977), with Cohen's κ of 0.820 on strict consensus and 0.885 on atomic items in the main benchmark, and 0.746 in the reasoning toggle arm.
+
+Paired contrasts matched identical model-by-question cells using two-sided exact McNemar binomial tests for binary accuracy and two-sided Wilcoxon signed-rank tests for difference-in-differences and token counts. Accounting for multiple comparisons and clustering across 64 questions and four papers, we pre-specify three primary confirmatory contrasts—Cycle 2 versus Manuscript Only, Cycle 2 versus Raw BM25 overall, and Cycle 2 versus Raw BM25 on unanswerable abstention—treating subgroup and pooled comparisons as structured exploratory analyses. Online Supplement S1 (Table S5) reports Holm–Bonferroni multiplicity-adjusted *p*-values across all key contrasts, question-clustered bootstrap confidence intervals, and full single-judge checks.
+
+To verify practical editorial burden and audit scoring neutrality (Zheng *et al.* 2023), the study's sole author completed two tasks in a unit-tested blind local workbench stripping all model, condition, and judge metadata. In **Task 1 (Author Crate Audit)**, the researcher verified cards side-by-side against highlighted primary lines, logging verdicts and stopwatch timing; because the researcher verified both internal manuscripts as original author and audited both external *eLife* companions as a non-author reader, timed runs capture original-author verification. In **Task 2 (Blinded Judge Calibration)**, the researcher blindly graded 180 stratified responses split equally between 90 AI-unanimous trials (92.3% of the benchmark) and 90 AI-disagreement trials (oversampling disputes 6.5× relative to their 7.7% prevalence), yielding Horvitz–Thompson post-stratified κ with 5,000-draw stratified bootstrap 95% confidence intervals and two-sided Fisher exact tests for differential condition bias across both error directions.
+
+---
+
+## 5. Empirical Results
+
+### 5.1 Cycle 1: Evidentiary Voids, Abstention Calibration, and Scale Effects
+
+Table 5 summarizes main-benchmark performance across all five conditions, while Figure 2 shows clean accuracy across reading obligations alongside token scaling across archive sizes.
+
+**Table 5.** Aggregate performance in the main benchmark (Panel A: pre-specified 8-model default fleet, *n* = 512/arm, *n* = 256 preload, *N* = 2,304; Panel B: tool-using arms stratified by default reasoning state; 5,000-draw bootstrap 95% CIs).
+
+| Cohort and Condition | *n* | Clean Success (95% CI) | Mean Rubric | Overclaim | Halluc. | Wrong Abst. | Median Tokens | Mean Tools (Cards) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Panel A — Pre-Specified Default Fleet (All 8 Models)** | | | | | | | | |
+| Manuscript Only | 512 | 38.7% (34.6–43.0) | 56.9% | 4.1% | 13.7% | 39.3% | 22,840 | 0.00 (0.00) |
+| Raw Full-Text Search (BM25) | 512 | 71.7% (67.8–75.4) | 90.1% | 3.7% | 4.3% | 2.7% | 74,510 | 3.93 (0.00) |
+| Cycle 1 Protocol | 512 | 74.2% (70.5–77.9) | 91.6% | 3.3% | 4.3% | 0.8% | 77,075 | 3.88 (1.38) |
+| Cycle 2 Protocol | 512 | **74.6%** (70.7–78.5) | 90.5% | 3.5% | 4.9% | 1.4% | 75,639 | 3.29 (1.18) |
+| Full-Card Preload (2 cases) | 256 | 70.7% (65.2–76.2) | 90.1% | 3.9% | 4.7% | 1.6% | 71,892 | 2.96 (0.00) |
+| **Panel B — Stratified by Default Reasoning State** | | | | | | | | |
+| *7 Reasoning-ON Models:* Raw BM25 | 448 | 74.1% (70.1–77.9) | 90.6% | 3.8% | 4.5% | 2.7% | 70,403 | 3.85 (0.00) |
+| *7 Reasoning-ON Models:* Cycle 1 | 448 | 74.8% (70.8–78.8) | 91.6% | 3.3% | 4.7% | 0.9% | 73,211 | 3.70 (1.44) |
+| *7 Reasoning-ON Models:* **Cycle 2** | 448 | **77.5%** (73.4–81.2) | **92.1%** | **2.9%** | **4.0%** | **0.9%** | 76,315 | 3.47 (1.30) |
+| *DeepSeek V3.2 (OFF):* Raw BM25 | 64 | 54.7% (42.2–67.2) | 87.0% | 3.1% | 3.1% | 3.1% | 127,013 | 4.44 (0.00) |
+| *DeepSeek V3.2 (OFF):* Cycle 1 | 64 | **70.3%** (59.4–81.2) | **92.1%** | 3.1% | **1.6%** | **0.0%** | 158,505 | 5.16 (0.94) |
+| *DeepSeek V3.2 (OFF):* Cycle 2 | 64 | 54.7% (42.2–67.2) | 79.1% | 7.8% | 10.9% | 4.7% | 30,458 | 2.03 (0.38) |
+
+![Accuracy by scholarly interrogation task and archive scale vs median token usage](figures/fig2_condition_stratum_accuracy.png)
+
+**Figure 2.** **(A)** Strict consensus clean success with 95% bootstrap confidence intervals across five reading obligations for all eight models (*n* = 2,048 trials across four primary arms; full-card preload omitted). **(B)** Median total tokens per query across the four cases ordered by supplementary archive size (*n* = 1,536 trials across tool-using arms), highlighting the archive-scale efficiency crossover.
+
+Three patterns stand out in Cycle 1. First, supplying a manuscript alone fails sharply whenever interrogation requires supplementary procedures, tables, or review histories. Manuscript-only reading cleared fewer than two-fifths of queries overall, scored zero on supplementary facts, and tripled hallucinations alongside frequent unwarranted abstentions (Table 5; Figure 2A). Adding the Cycle 1 protocol boosted overall accuracy by roughly 36 percentage points, cut hallucinations more than threefold, virtually eliminated wrong abstentions, and preserved baseline accuracy on article-only queries.
+
+Second, calibrated Okapi BM25 proved a formidable competitor (Table 5, Panel A). Pooled across all eight models, Cycle 1 held only a small directional edge over raw search while edging ahead on every study individually (Online Supplement S1, Table S2). Its clear, statistically significant breakthrough emerged on **unanswerable abstention**, where declaring absent data in Layer 0 lifted clean abstention by 12.5 percentage points across eight wins with zero losses (Figure 2A; Table 6). On qualification binding pooled across all eight models, the randomized Cycle 1 gain over strong raw search was modest and non-significant (rising further in Cycle 2; Table S3), though notable within-model qualification gains appeared in DeepSeek V3.2 and among cloud reasoning models in Cycle 2 (Table S4). Because we did not run an additional arm disabling software co-retrieval over identical cards, inference regarding software caveat binding draws on preliminary failure diagnosis paired with within-model adherence rather than a direct co-retrieval ablation. Stratifying Panel B of Table 5 by default reasoning state foreshadows our key redesign finding: across all seven native reasoning-enabled models, Cycle 2 improved or matched both raw search and Cycle 1 on every accuracy and safety column, whereas the sole reasoning-disabled default model drove the slight pooled dips in Panel A.
+
+Third, token consumption revealed a crisp **archive-scale crossover** (Figure 2B; Table S2). On the largest archive (*Computational Aesthetics*, 60 heterogeneous files), Cycle 1 matched or beat both raw search and full-card preloading in accuracy while cutting median tokens by roughly a quarter against raw search and by a third against naive preloading. The two mid-sized archives achieved higher accuracy at essentially neutral token cost. Conversely, on the smallest archive (*Nanopore RNA Calibration*, dominated by compact spreadsheets), raw BM25 already approached ceiling accuracy and layered card reading increased token volume by roughly half through double-reading.
+
+### 5.2 Forensic Error Analysis: Diagnosing Three Protocol Flaws
+
+Consistent with learning openly from breakdowns (Gaver 2012; Cash 2018), we audited every discordant Cycle 1 trial where raw search succeeded but Cycle 1 failed. While several architectures gained substantially—most notably DeepSeek V3.2 and Qwen 3.8 Max (Table S1)—two aggressive-search reasoners (Inkling 2 Small and Grok 4.6) trailed raw search slightly. Forensic trace analysis traced those losses to three procedural defects rather than card inaccuracies.
+
+First, **compression substitution** explained nearly one-third of Cycle 1 losses: Inkling 2 Small's errors contained zero hallucinations or overclaims, yet omitted a verbatim phrase or secondary statistic because the model stopped after reading a short card instead of opening a brief peer-review letter. Second, models opened cards needlessly on self-contained article-only queries, inflating token counts without improving accuracy (Table S3). Third, assistants executed repeated confirmation searches even after the Negative-Coverage Map declared an item absent, leaving unanswerable token budgets nearly equal to raw search. These three diagnostics directly shaped Cycle 2.
+
+### 5.3 Cycle 2: Protocol Redesign Effects and Role-Overlap Robustness
+
+Deploying Cycle 2 over byte-identical corpora, cards, and questions improved every targeted telemetry metric while exposing a sharp architectural divergence (Table 6; Figure 3; Table S1).
+
+**Table 6.** Key paired contrasts for the Cycle 2 protocol across all eight models, cloud cohorts, and local open-weight models (*N* = 2,304 main trials; Holm–Bonferroni and single-judge sensitivity in Table S5).
+
+| Cohort and Paired Contrast | Pairs | Clean Accuracy A vs. B (Δ) | Gains / Losses | McNemar *p* | Median Tokens A vs. B (Wilcoxon *p*) |
+|---|---:|---:|---:|---:|---:|
+| All 8 models: Cycle 2 vs. Manuscript Only *(confirmatory)* | 512 | **74.6% vs. 38.7% (+35.9 pp)** | **+193 / −9** | **< 10⁻⁴⁵** | 75,639 vs. 22,840 (< 10⁻⁶⁰) |
+| All 8 models: Cycle 2 vs. Raw BM25 *(confirmatory)* | 512 | 74.6% vs. 71.7% (+2.9 pp) | +43 / −28 | 0.0959 | 75,639 vs. 74,510 (0.173) |
+| Unanswerable Abstention: Cycle 2 vs. Raw *(confirmatory)* | 64 | **85.9% vs. 73.4% (+12.5 pp)** | **+8 / −0** | **0.0078** | **115,747 vs. 166,547 (0.0329)** |
+| All 8 models: Cycle 2 vs. Cycle 1 | 512 | 74.6% vs. 74.2% (+0.4 pp) | +36 / −34 | 0.9050 | **75,639** vs. 77,075 (< 0.0001) |
+| All 8 models: Cycle 2 vs. Full-Card Preload | 256 | 72.7% vs. 70.7% (+2.0 pp) | +20 / −15 | 0.4996 | **58,253** vs. 71,892 (< 10⁻¹⁴) |
+| Cloud Reasoning-ON (4 models): Cycle 2 vs. Raw† | 256 | **92.2% vs. 88.3% (+3.9 pp)**† | **+14 / −4** | **0.0309** | 84,158 vs. 83,767 (0.065) |
+| Cloud Reasoning-ON (4 models): Cycle 2 vs. Preload | 128 | **93.0% vs. 85.2% (+7.8 pp)** | **+12 / −2** | **0.0129** | **69,559 vs. 75,801 (< 10⁻¹⁰)** |
+| Local Open-Weight (3 models): Cycle 2 vs. Raw | 192 | 57.8% vs. 55.2% (+2.6 pp) | +22 / −17 | 0.5224 | 54,653 vs. 52,741 (**0.0057**) |
+
+*†Zero hallucinations across 256 Cycle 2 trials; single-judge sensitivity and multiplicity adjustments are detailed in Section 5.5 and Table S5.*
+
+![Per-model progression across raw search, Cycle 1, and Cycle 2 protocol](figures/fig3_model_progression.png)
+
+**Figure 3.** Strict consensus clean success across all 64 card-blind questions for all eight cloud and local open-weight models. Under Cycle 2, every model beat or tied strong Okapi BM25 full-text search.
+
+Under Cycle 2, **all eight models beat or tied Okapi BM25** with zero model-level losses (Figure 3). Short-span verification cues nearly halved compression-substitution errors, restoring Inkling 2 Small to parity and lifting Qwen 3.8 Max, Mistral Large 4, Grok 4.6, and local Gemma 4 31B above raw search (Table S1). Across our three pre-specified confirmatory contrasts, Cycle 2 retained its large margin over manuscript-only reading, stayed near parity with strong BM25 overall, and preserved its full unanswerable-abstention advantage while slashing negative-search token budgets by nearly one-third—an abstention win surviving Holm–Bonferroni correction, question-clustered testing, and both individual judges identically (Table S5). Among the four cloud reasoning models, Cycle 2 beat both raw search and full-card preloading under strict consensus with zero hallucinations, though Section 5.5 shows the narrower raw-search margin is sensitive to single-judge ceiling effects. Local open-weight models gained slightly in accuracy while incurring a small statistically significant token increase (Table 6), and temporal-evolution accuracy dipped modestly due to DeepSeek V3.2 (reasoning OFF) and GPT-OSS 20B (Table S3).
+
+Sensitivity checks excluding Grok 4.6 (question author) and DeepSeek V3.2 (card auditor) confirmed that dual roles did not inflate protocol gains. Dropping either or both models actually widened both the cloud reasoning lead and the unanswerable-abstention advantage with zero losses (Table S4).
+
+Yet Cycle 2 also revealed one striking failure. While six models improved, **DeepSeek V3.2 fell nearly 16 percentage points** below Cycle 1 (Figure 3). Tool telemetry exposed the cause: whereas reasoning-enabled cloud models applied the Article-Sufficiency Gate selectively to article-only queries while opening qualification cards reliably, DeepSeek V3.2—the sole cloud model defaulting to reasoning OFF—exploited the opt-out clause to skip all tools on **15 of 16 qualification-binding questions**, collapsing back to manuscript-only performance.
+
+### 5.4 Within-Weight Reasoning Experiment: Architecture-Dependent Gate Fragility
+
+To test whether DeepSeek V3.2's opt-out collapse reflected a general causal interaction between conditional gates and deliberation, we toggled reasoning modes within identical weights across all three clean-switch models (Table 7; Figure 4).
+
+![Within-weight reasoning toggle accuracy and qualification zero-tool opt-out rates](figures/fig4_reasoning_ablation_crossover.png)
+
+**Figure 4.** **(A)** Strict consensus clean success across all three tool-using arms when toggling reasoning mode within identical model weights (*n* = 576 ablation trials paired with native runs; `†` marks Qwen 3.8 27B OFF runs under a tightened 40,960-token GPU cap). **(B)** Zero-tool opt-out rates on qualification-binding queries under Cycle 1 (mandatory) versus Cycle 2 (optional bypass gate).
+
+**Table 7.** Bidirectional within-weight reasoning toggle experiment across three architectures (*n* = 64 questions per model cell; full crash-excluded, DiD, and single-judge sensitivity reported in Table S5).
+
+| Model and Architecture | Reasoning Mode | Raw BM25 | Cycle 1 (Mandatory) | Cycle 2 (Gated) | Cycle 2 vs. Raw Δ (*p*) | Qual. 0-Tool (`C1 → C2`) | Median Tokens (`Raw / C1 / C2`) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| DeepSeek V3.2 (Cloud MoE) | OFF *(default)* | 54.7% | **70.3%** | 54.7% | +0.0 pp (1.00) | 1 → **15/16** | 127K / 159K / 30K |
+| DeepSeek V3.2 (Cloud MoE) | ON *(medium)* | 60.9% | 65.6% | **73.4%** | **+12.5 pp (0.0386)** | 0 → **0/16** | 197K / 144K / **144K (−27%)** |
+| Qwen 3.8 27B (Local Dense) | ON *(49K cap)* | 78.1% | 76.6% | **79.7%** | +1.6 pp (1.00) | 0 → 4/16 | 53K / 58K / 72K |
+| Qwen 3.8 27B (Local Dense) | OFF *(40K cap)*† | 67.2%† | 76.6%† | **89.1%**† | **+21.9 pp (0.0013)** | 0 → **0/16** | 73K / 70K / 82K |
+| GPT-OSS 20B (Local MoE) | Medium *(default)* | 37.5% | **46.9%** | 39.1% | +1.6 pp (1.00) | 6 → 3/16 | 83K / 65K / 77K |
+| GPT-OSS 20B (Local MoE) | Low *(reduced)* | 40.6% | 35.9% | 40.6% | +0.0 pp (1.00) | 11 → 9/16 | 44K / 40K / 42K |
+| **Pooled 3 Models (`n = 192`)** | **Reasoning ON / Higher** | 58.9% | 63.0% | **64.1%** | +5.2 pp (0.143) | — | Abstention: 62.5% → 79.2% |
+| **Pooled 3 Models (`n = 192`)** | **Reasoning OFF / Lower**‡ | 54.2% | 60.9% | **61.5%** | **+7.3 pp (0.0488)**‡ | — | Crash-excl. (*n* = 181): +3.9 pp (*p* = 0.30) |
+
+*†At the tightened 40,960-token cap, Qwen 27B OFF hit nine raw-search overflows versus two under Cycle 2; restricted to the 52 common zero-error trials, Cycle 2 still beats raw search cleanly across all judges (Table S5). ‡Excluding Qwen's 11 overflow pairs renders Pooled-OFF differences non-significant overall and on abstention (Table S5).*
+
+The reasoning toggles revealed three distinct architectural regimes rather than one monotonic rule. First, inside **DeepSeek V3.2**, enabling explicit reasoning causally cured its bypass collapse: qualification opt-outs dropped from 15 of 16 to **zero** (Figure 4B), and Cycle 2 beat raw search significantly while cutting median tokens by more than a quarter (Table 7). Directly contrasting the gated protocol against the mandatory protocol confirms a robust within-weight interaction surviving Holm–Bonferroni correction and Judge A alone, whereas the corresponding gated-versus-raw difference-in-differences was directional under consensus and significant under Judge A (Table S5). Pooling reasoning-enabled DeepSeek V3.2 with the four mandatory-reasoning cloud models in a post-hoc unified five-cloud analysis yielded a multiplicity-safe accuracy gain alongside a substantial median token reduction and exact hallucination parity with raw search; extending that post-hoc reasoning-enabled pool across all eight models similarly lifted Cycle 2 significantly above both raw search and Cycle 1 under strict consensus (Table S5).
+
+Second, **Qwen 3.8 27B inverted DeepSeek's gate trajectory**. With reasoning disabled, Qwen 27B recorded zero qualification opt-outs under Cycle 2 (versus four of 16 when reasoning was enabled) and reached its highest accuracy overall. Crucially, raw BM25 did *not* degrade intrinsically when Qwen's reasoning was switched off: on the 52 common zero-error questions unaffected by the 40,960-token memory cap, raw search stayed essentially flat across modes while Cycle 2 rose sharply and prevented seven of nine GPU overflows (Table 7 footnote; Table S5). Removing Qwen's overflow pairs likewise reduces the pooled three-model reasoning-OFF gain to a non-significant directional margin overall and on abstention.
+
+Third, **GPT-OSS 20B hit a uniform capability floor rather than selective gate abuse**. Lowering reasoning effort increased tool skipping across every arm—including mandatory Cycle 1—while Cycle 2 skipped fewer tools than Cycle 1 in both modes. Together, these three architectures prove that natural-language bypass clauses do not fail identically whenever reasoning is disabled; instead, they exhibit **unpredictable, architecture- and deliberation-dependent fragility** capable of causing silent caveat omission in major production models.
+
+### 5.5 Human Validation: Authoring Burden and Blinded Judge Calibration
+
+Both human validation tasks were completed by the study's author inside the blind local workbench. In **Task 1 (Author Crate Audit)**, all 68 evidence cards across the four studies were verified and logged. Over 94% of audited cards (64 of 68) were approved as-is, four received minor precision tweaks, and **zero contained substantive factual errors**. Stopwatch logs on the researcher's two authored manuscripts averaged **15.0 minutes per paper** (roughly 17 minutes for the 60-file empirical study and 13 minutes for the qualitative review), while verification of both external *eLife* articles proceeded without engaging the stopwatch and was self-reported at roughly 15 minutes each. Human review genuinely complemented automated auditing, rejecting one DeepSeek false positive while catching four subtle statistical wording issues missed by both AI models (Online Supplement S1, Section S1.6).
+
+In **Task 2 (Blinded Human–AI Calibration)**, the researcher graded all 180 stratified items blind for overall clean-success pass/fail and error flags covering overclaiming, hallucination, and wrong abstention (Online Supplement S1, Section S1.6). Forensic notes verified effective blinding, distinguishing coverage voids on manuscript-only trials from fabrication.
+
+**Table 8.** Blinded human–AI judge calibration (*n* = 180 stratified 50/50 between AI-unanimous and AI-disagreement trials) projected to the *N* = 2,304 main benchmark with 5,000-draw stratified bootstrap 95% CIs.
+
+| Calibration Stratum or Projection | Sample (*n*) | Benchmark Share | Exact Agreement (95% CI) | Cohen's κ (95% CI) | Diagnostic Interpretation |
+|---|---:|---:|---:|---:|---|
+| AI-Unanimous Stratum (judges agree) | 90 | 92.3% | **93.3%** | **0.834** (0.683–0.948) | Almost perfect (Landis & Koch 1977); pass precision 95.4% |
+| AI-Disagreement Stratum (judges split) | 90 | 7.7% | — | — | Human passed 82.2% of disputes; consensus errs conservatively |
+| Post-Stratified 2-Judge Consensus | 180 | 100.0% | **87.4%** (82.2–91.9) | **0.710** (0.588–0.813) | Substantial reliability; understates human pass rate by 6.5 pp |
+| Post-Stratified Judge A (GLM-5.3) | 180 | 100.0% | **91.6%** (86.4–96.0) | **0.794** (0.661–0.900) | Substantial (bordering almost perfect); near-zero bias (−0.3 pp) |
+| Post-Stratified Judge B (Kimi-K2.5) | 180 | 100.0% | **88.2%** (83.1–92.5) | **0.722** (0.603–0.825) | Substantial reliability; stricter on borderline phrasing (−5.0 pp) |
+
+Three methodological findings follow from Table 8 and Table S5. First, agreement on the 92.3% unanimous stratum was almost perfect, while human grading passed over four-fifths of disputes, confirming conservative consensus scoring. Projected to the full benchmark, Judge A achieved substantial reliability (bordering almost perfect) with virtually zero pass-rate bias. Second, two-sided Fisher exact tests found no statistically significant differential bias favoring companions over raw search across either error direction for Consensus, Judge A, or Judge B (all *p* ≥ 0.18; Online Supplement S1, Section S1.6), though our stratified sample size has limited power to exclude small 5–10 percentage-point shifts.
+
+Third, single-judge sensitivity audits cleanly separated **durable findings** from **ceiling-sensitive margins** (Table S5). Five conclusions remained statistically significant under Judge A alone, Judge B alone, and strict consensus: the large gain over manuscript-only reading, the unanswerable-abstention advantage, DeepSeek V3.2's reasoning-ON recovery and gate interaction, Qwen 3.8 27B's 52-trial zero-error lead, and the unified five-cloud reasoning-ON gain. Conversely, two narrower contrasts did not reach significance under Judge A alone—overall eight-model Cycle 2 versus raw search and the four-model cloud contrast—because Judge A already graded strong Okapi BM25 near ceiling. Distinguishing these tiers guards against overclaiming while pinpointing where progressive disclosure delivers robust practical leverage.
+
+---
+
+## 6. Discussion
+
+### 6.1 Designing Disclosure Protocols Rather Than Static Formats
+
+The central design science lesson of this investigation is that trustworthy AI-assisted academic reading is not merely a static metadata-format challenge; it is a **protocol design problem** in which representation, tool affordances, and reader deliberation interact dynamically. This directly instantiates Gericke, Eckert & Stacey's (2022) insight that a design method succeeds only when its representational structure, procedural steps, and actor capabilities align.
+
+Comparing Cycle 1 and Cycle 2 makes that principle concrete. Every word of the four corpora, 68 evidence cards, entry manifests, and 64 questions remained byte-identical across cycles. Altering only three procedural disclosure rules nearly halved compression-substitution losses, slashed negative-search token waste by nearly a third, and brought all eight models to parity or superiority over strong Okapi BM25. Conversely, adding a benign natural-language opt-out clause induced near-total caveat bypass on DeepSeek V3.2 until explicit reasoning was turned on. **How a protocol discloses and enforces context matters just as much as what the companion encodes.**
+
+Our findings also clarify how human-centered interaction design transfers—and diverges—when extended to AI readers. Shneiderman's (1996) overview-first hierarchy and Springer & Whittaker's (2019) progressive disclosure transfer productively, beating naive full-card preloading in both accuracy and token economy among frontier models (Table 6). Likewise, server-side caveat co-retrieval translates Norman's (2013) forcing function to tool interfaces. Yet computational readers diverge from human scholars in two critical ways: polished summaries (Bobbe *et al.* 2023) trigger **compression substitution** unless paired with deterministic verification cues, and flexible prompt rules fracture unpredictably across model architectures—echoing recent *Design Science* evidence that LLM workflows require structural scaffolding rather than open-ended prompt discretion (Norheim *et al.* 2024; Tanaka *et al.* 2026; Siddharth & Luo 2026).
+
+### 6.2 Five Empirically Bounded Design Principles
+
+Synthesizing our two design cycles, within-weight reasoning tests, and human audits yields five transferable, empirically bounded design principles (Gregor & Hevner 2013):
+
+**DP1 — Declare verified absence explicitly in a strictly bounded entry manifest.**  
+*Design Rule and Boundary:* Place a concise Negative-Coverage Map inside an entry manifest capped below roughly 2.5 kilobytes, paired with a single-search confirmation rule. Declaring what an archive does *not* contain delivered our single most durable, judge-invariant, and multiplicity-safe gain over strong text search (+12.5 percentage points across eight wins with zero losses) while slashing abstention token budgets by nearly one-third. This principle applies broadly whenever supplementary archives are incomplete or selectively deposited.
+
+**DP2 — Match progressive-disclosure packaging to archive scale and heterogeneity.**  
+*Design Rule and Boundary:* Deploy layered companions on multi-file archives rather than tiny homogeneous supplements. Mid-sized heterogeneous bundles (five to eight files spanning 125–181 kilobytes) gained accuracy at essentially neutral token cost, while the 60-file, 1.08-megabyte archive yielded simultaneous accuracy gains and 21–34% token savings against both raw search and preloading. On tiny tabular archives (under 50 kilobytes of compact CSVs), strong BM25 nears ceiling accuracy and layered cards add roughly half again in double-reading token overhead.
+
+**DP3 — Design evidence cards as verifiable routing anchors to prevent compression substitution.**  
+*Design Rule and Boundary:* Frame atomic cards explicitly as *navigation and qualification indices* rather than substitutes for primary prose, pairing retrieval with automated verification cues whenever a card cites a short primary span such as a peer-review letter or table. Without deterministic escalation cues, capable agents stop prematurely at card boundaries and drop verbatim phrasing or secondary statistics.
+
+**DP4 — Enforce qualification binding at the software boundary rather than through passive links or full preloading.**  
+*Design Rule and Boundary:* Implement bidirectional co-retrieval of linked caveat and update cards inside the retrieval server as a forcing function rather than preloading entire metadata bundles or hoping agents follow Markdown hyperlinks. While our study establishes randomized advantages over full-card preloading and strong within-model adherence in DeepSeek V3.2 and cloud reasoning models, directly ablating co-retrieval over identical cards remains an explicit next test (Section 6.4).
+
+**DP5 — Move conditional bypass gates out of natural-language prompts into deterministic routing logic.**  
+*Design Rule and Boundary:* Never expose natural-language tool-skipping clauses uniformly across heterogeneous AI fleets. Within-weight toggles revealed unpredictable, architecture- and deliberation-dependent fragility: DeepSeek V3.2 skipped 15 of 16 qualification queries when reasoning was disabled (reversing to zero skips when reasoning was enabled), whereas Qwen 3.8 27B inverted that pattern and GPT-OSS 20B hit a uniform tool-calling floor. Repositories serving mixed agents should retain mandatory card-first routing on claim queries or enforce sufficiency gating programmatically in client or server code.
+
+### 6.3 Implications for Academic Publishing and Governance
+
+These results answer practical adoption and institutional governance concerns highlighted by *Design Science* editors (Papalambros *et al.* 2026). Publishers need not replace human prose or push authors into machine-only writing environments: layering a lightweight RO-Crate disclosure protocol over an *immutable* archive preserves scholarly narrative intact while making supplementary protocols, caveats, and review histories inspectable.
+
+Timed author sign-off further addresses adoption friction. Combining isolated AI drafting, deterministic schema validation, cross-family auditing, and a side-by-side human workbench brought original-author verification on two internal manuscripts down to an average of **15 minutes per paper**—comparable to checking galley proofs—with zero substantive errors and clear human value on statistical precision. This workflow safeguards human accountability without imposing prohibitive workload.
+
+Equally critical, publisher-deployed companions create **strategic authoring incentives** demanding governance safeguards. Left unchecked, authors could soften caveats or omit reviewer reservations in Layer-0 manifests or Layer-1 cards. Three protocol mechanisms counter strategic spin: cryptographic SHA-256 links binding cards to immutable peer-review letters and methodological checklists, publisher-hosted deterministic validation requiring every published reviewer reservation to link to at least one qualification card, and transparent audit logs distinguishing author-approved metadata from primary editorial records. Repository platforms such as Zenodo, OSF, or journal portals can adopt standardized Negative-Coverage Maps and server-enforced caveat bundling as reusable infrastructure primitives.
+
+### 6.4 Limitations, Threats to Validity, and Future Work
+
+Six limitations bound our claims. First, the study's sole author performed all 68 human crate audits (with stopwatch timing on the two authored internal manuscripts and unlogged estimates on both external *eLife* studies) and all 180 blinded calibration ratings. Multi-rater studies with independent original authors and blind domain raters remain essential.
+
+Second, four cases across four disciplines cannot guarantee generalization across every scholarly genre (*N* = 4 papers); extending the protocol to multimodal figures, notebooks, and engineering CAD repositories warrants dedicated design research. Third, we did not run a main-benchmark arm turning software caveat co-retrieval off over identical cards, leaving DP4's specific margin over passive links anchored in preliminary diagnostics and within-model adherence. Fourth, tightening Qwen 3.8 27B's local GPU cap from 49,152 to 40,960 tokens in the OFF arm induced overflow asymmetry; although the 52-trial zero-error check confirmed Qwen's underlying accuracy lead, larger-VRAM replication would cleanly eliminate hardware caps. Fifth, while excluding Grok 4.6 and DeepSeek V3.2 strengthened core findings, future benchmarks should enforce zero overlap across authoring, auditing, and reading fleets. Finally, regional API policies limited our cloud fleet to five families alongside three local models; our open benchmark archive enables straightforward cross-vendor replication.
+
+### 6.5 Transparency and AI Contribution Statement
+
+Consistent with *Design Science* norms (Papalambros *et al.* 2026), the author assumes full scholarly accountability and verified all audits, calibration grades, figures, and statistics. Distinct AI families served bounded operational roles: Gemini 4 Neon drafted the four companions and logged five precision edits; DeepSeek V3.2 audited cards and also ran as one of eight stateless readers; Grok 4.6 drafted the 64 card-blind questions from raw archives and also ran as a reader (exclusion checks in Table S4); six additional models served solely as readers; and GLM-5.3 and Kimi-K2.5 served exclusively as zero-overlap blinded judges. An AI assistant supported harness scripting, figure rendering, and editorial drafting under continuous human direction. Online Supplement S2 packages a validated, self-referential PDRP companion and runnable CLI/MCP server over this article's frozen records.
+
+---
+
+## 7. Conclusion
+
+As AI assistants become routine intermediaries for reading academic literature, publishers can no longer treat supplementary protocols, data tables, and peer-review histories as passive attachments. Across two iterative design cycles, a within-weight reasoning experiment totaling 2,880 blinded trials, authoring audits, and 180 blinded human calibration checks, we designed and evaluated the three-layer **Progressive-Disclosure Research Protocol (PDRP)**.
+
+Pairing a strictly bounded entry manifest declaring verified absence, atomic evidence cards with software-enforced caveat binding, and automated primary-span cues over an immutable archive dramatically outperforms manuscript-only reading. Against strong full-text search, PDRP achieves overall parity while delivering durable, judge-invariant advantages on unanswerable abstention, deliberative cloud accuracy, and large-archive token economy—while adding overhead on tiny tabular supplements. Our diagnostics prove that disclosure protocols are never neutral wrappers: concise cards invite compression substitution without deterministic verification cues, packaging must match archive scale, and prompt-level bypass gates display architecture-dependent fragility requiring programmatic enforcement. Grounded by structured author verification and clear governance safeguards, these five bounded design principles offer a practical, standards-based foundation for trustworthy AI-mediated scholarly communication.
+
+---
+
+## Declarations
+
+**Author contributions:** Atticus Sims — Conceptualization; Methodology; Software; Validation; Formal analysis; Investigation; Data curation; Writing (original draft, review & editing); Visualization.
+
+**Financial support:** This research received no specific grant from any funding agency, commercial, or not-for-profit sectors.
+
+**Competing interests:** The author declares none.
+
+**Ethical standards:** No external human participants were recruited; all companion audits and blinded calibration ratings were performed by the author over internal manuscripts and open-access CC-BY-4.0 *eLife* publications.
+
+**Data availability:** The open-source `pdrp` toolkit, RO-Crate validator, CLI/MCP server, both CC-BY-4.0 *eLife* companions, this article's self-referential companion (Online Supplement S2), and all benchmark scripts are publicly available under MIT and CC-BY-4.0 licenses at https://github.com/AtticusSims/pdrp (archival Zenodo DOI minted upon publication). The two unpublished internal manuscripts are available to editors and reviewers upon request and will be archived alongside full traces once published.
+
+**Supplementary material:** **Online Supplement S1** (protocol specs, *Hippocampal Ripples* specimen, model parameters, Tables S1–S5, audit logs) and **Online Supplement S2** (validated self-referential PDRP crate and runnable Python CLI/MCP server).
+
+---
+
+## References
+
+Blessing, L. T. M. & Chakrabarti, A. 2009 *DRM, a Design Research Methodology*. Springer London. https://doi.org/10.1007/978-1-84882-587-1
+
+Bobbe, T., Opeskin, L., Lüneburg, L.-M., Wanta, H., Pohlmann, J. & Krzywinski, J. 2023 Design for communication: how do demonstrators demonstrate technology? *Design Science* **9**, e3. https://doi.org/10.1017/dsj.2023.1
+
+Cash, P. J. 2018 Developing theory-driven design research. *Design Studies* **56**, 84–119. https://doi.org/10.1016/j.destud.2018.03.002
+
+Clark, T., Ciccarese, P. N. & Goble, C. A. 2014 Micropublications: A semantic model for claims, evidence, arguments and annotations in biomedical communications. *Journal of Biomedical Semantics* **5** (1), 28. https://doi.org/10.1186/2041-1480-5-28
+
+Efeoğlu, A. & Møller, C. 2023 Redesigning design thinking for codesign with nondesigners: a method efficacy study. *Design Science* **9**, e14. https://doi.org/10.1017/dsj.2023.11
+
+Gao, T., Yen, H., Yu, J. & Chen, D. 2023 Enabling large language models to generate text with citations. In *Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing*, pp. 6465–6488. https://doi.org/10.18653/v1/2023.emnlp-main.398
+
+Gaver, W. 2012 What should we expect from research through design? In *Proceedings of the SIGCHI Conference on Human Factors in Computing Systems*, pp. 937–946. https://doi.org/10.1145/2207676.2208538
+
+Gericke, K., Eckert, C. & Stacey, M. 2022 Elements of a design method – a basis for describing and evaluating design methods. *Design Science* **8**, e29. https://doi.org/10.1017/dsj.2022.23
+
+Gregor, S. & Hevner, A. R. 2013 Positioning and presenting design science research for maximum impact. *MIS Quarterly* **37** (2), 337–355. https://doi.org/10.25300/misq/2013/37.2.01
+
+Heer, J., Conlen, M., Devireddy, V., Nguyen, T. & Horowitz, J. 2023 Living Papers: A language toolkit for augmented scholarly communication. In *Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology*, pp. 1–13. https://doi.org/10.1145/3586183.3606791
+
+Hevner, A. R., March, S. T., Park, J. & Ram, S. 2004 Design science in information systems research. *MIS Quarterly* **28** (1), 75–106. https://doi.org/10.2307/25148625
+
+Kokate, R. & Onkar, P. 2026 Analogical reasoning with large language models: a co-creative framework and benchmarking of LLMs in design ideation. *Design Science* **12**, e4. https://doi.org/10.1017/dsj.2025.10044
+
+Krajcer, L., Schut, A., Wang, P., Quanjer, A.-J. & Gonçalves, M. 2026 The hidden costs of AI-assisted ideation: empirical findings on ChatGPT’s impact on novice designers’ creative confidence and design process. *Design Science* **12**, e16. https://doi.org/10.1017/dsj.2026.10060
+
+Landis, J. R. & Koch, G. G. 1977 The measurement of observer agreement for categorical data. *Biometrics* **33** (1), 159–174. https://doi.org/10.2307/2529310
+
+Lebo, T., Sahoo, S. & McGuinness, D. (eds.) 2013 *PROV-O: The PROV Ontology*. W3C Recommendation, 30 April 2013. https://www.w3.org/TR/2013/REC-prov-o-20130430/
+
+Leng, Y., Chen, H., Shang, F., Wang, X., Liu, M., Ma, R. & Qiu, J. 2026 Do agents need a new kind of paper? SPRA: Structured Paper Representation for Agents. *arXiv preprint* arXiv:2610.21424v2. https://doi.org/10.48550/arXiv.2610.21424
+
+Li, J., Wang, M., Zheng, Z. & Zhang, M. 2024 LooGLE: Can long-context language models understand long contexts? In *Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics*, pp. 16304–16333. https://doi.org/10.18653/v1/2024.acl-long.859
+
+Li, Z., Chen, X., Yu, H., Lin, H., Lu, Y., Tang, Q., Huang, F., Han, X., Sun, L. & Li, Y. 2025 StructRAG: Boosting knowledge intensive reasoning of LLMs via inference-time hybrid information structurization. In *International Conference on Learning Representations (ICLR 2025)*. https://proceedings.iclr.cc/paper_files/paper/2025/hash/5975754c7650dfee0682e06e1fec0522-Abstract-Conference.html
+
+Liu, Jiachen, Pei, J., Huang, J., Si, C., Qu, A., Tang, X., Lu, R., Chen, L., Bai, X., Zheng, H., Chen, C., Chen, Z., Ye, H., Fu, Y., He, Z., Jin, Z., Zhang, Z., Sun, S., Harmon, M., Wang, D., Zhu, Q., Zeng, J., Sun, J., Wu, M., Zhou, B., You, C., Lu, S., Qiu, Y., Lai, F., Yuan, Y., Li, Y., Hong, J., Zhu, R., Chen, B., Pentland, A., Chen, A., Chowdhury, M. & Zhang, Z. 2026 The last human-written paper: Agent-Native Research Artifacts. *arXiv preprint* arXiv:2604.24658v3. https://doi.org/10.48550/arXiv.2604.24658
+
+Liu, Jing, He, X., Yang, C., Axmacher, N., Xue, G., Zhang, S. & Cai, Y. 2026 Ramping-up hippocampal ripples and their neocortical coupling support human visual short-term memory. *eLife* **15**, RP111304. https://doi.org/10.7554/eLife.111304
+
+Liu, N. F., Lin, K., Hewitt, J., Paranjape, A., Bevilacqua, M., Petroni, F. & Liang, P. 2024 Lost in the middle: How language models use long contexts. *Transactions of the Association for Computational Linguistics* **12**, 157–173. https://doi.org/10.1162/tacl_a_00638
+
+Lu, S. & Qi, X.-L. 2026 Agentic Publication Protocol: An attempt to modernize scientific publication. *arXiv preprint* arXiv:2606.27386v1. https://doi.org/10.48550/arXiv.2606.27386
+
+Miao, J., Davis, J. R., Zhang, Y., Pritchard, J. K. & Zou, J. 2026 Reimagining research papers as interactive and reliable AI agents. *Nature* **658** (8138), 1272–1280. https://doi.org/10.1038/s41586-026-11044-y
+
+Norheim, J. J., Rebentisch, E., Xiao, D., Draeger, L., Kerbrat, A. & de Weck, O. L. 2024 Challenges in applying large language models to requirements engineering tasks. *Design Science* **10**, e16. https://doi.org/10.1017/dsj.2024.8
+
+Norman, D. A. 2013 *The Design of Everyday Things*, revised and expanded edn. Basic Books.
+
+Ohnezeit, D., Loliashvili, E., Putzel, G., Verstraten, R., Silhavy, A. T., Liu, J. F., Nicholson, L., Pironti, A., Jaffrey, S. R., Depledge, D. & Wilson, A. C. 2026 Calibrated analysis framework for nanopore direct RNA sequencing uncovers cell-specific m⁶A proportions at conserved sites. *eLife* **15**, RP110672. https://doi.org/10.7554/eLife.110672
+
+Panickssery, A., Bowman, S. R. & Feng, S. 2024 LLM evaluators recognize and favor their own generations. *Advances in Neural Information Processing Systems* **37**, 68772–68802. https://doi.org/10.52202/079017-2197
+
+Papalambros, P. Y. 2015 Design Science: Why, What and How. *Design Science* **1**, e1. https://doi.org/10.1017/dsj.2015.1
+
+Papalambros, P. Y., Gero, J. S., Maier, A. M., Cagan, J., Ahmed-Kristensen, S., Albers, A., April, K. A., Blessing, L. T. M., Boujut, J.-F., Cantamessa, M., Cascini, G., Chakrabarti, A., Chen, L.-L., Clarkson, P. J., Jiao, J. R., Eckert, C. M., Feinberg, F. M., Gericke, K., Hanna, S., Hölttä-Otto, K., Janković, M., Jin, Y., Kleinsmann, M. S., Knight, T., Le Masson, P., Lewis, K. E., Linsey, J., Luo, J., McMahon, C. A., Nagai, Y., Pigosso, D. C. A., Reich, Y., Reid, T., Seepersad, C. C., Seifert, C. M., Shealy, T., Summers, J. D., Vermaas, P. E., Wartzack, S. J., Yang, M. C. & Yannou, B. 2025 Design Science: Why, What and How – Revisited. *Design Science* **11**, e48. https://doi.org/10.1017/dsj.2025.10026
+
+Papalambros, P. Y., Maier, A., Cagan, J., Cascini, G., Chakrabarti, A., Chen, L.-L., Gero, J. S., Jiao, R., Lloyd, P., Luo, J. & Seepersad, C. C. 2026 AI and publishing scientific papers: A discussion with design journal editors. *Design Science* **12**, e38. https://doi.org/10.1017/dsj.2026.10083
+
+Peffers, K., Tuunanen, T., Rothenberger, M. A. & Chatterjee, S. 2007 A design science research methodology for information systems research. *Journal of Management Information Systems* **24** (3), 45–77. https://doi.org/10.2753/mis0742-1222240302
+
+Robertson, S. & Zaragoza, H. 2009 The probabilistic relevance framework: BM25 and beyond. *Foundations and Trends in Information Retrieval* **4** (1–2), 1–174. https://doi.org/10.1561/1500000019
+
+Sclar, M., Choi, Y., Tsvetkov, Y. & Suhr, A. 2024 Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. *arXiv preprint* arXiv:2310.11324v2. https://doi.org/10.48550/arXiv.2310.11324
+
+Sefton, P., Soiland-Reyes, S. & Chadwick, E. (eds.) 2026 *RO-Crate Metadata Specification 1.3*. researchobject.org Community Recommendation, 22 June 2026. https://doi.org/10.5281/zenodo.20720080
+
+Shneiderman, B. 1996 The eyes have it: A task by data type taxonomy for information visualizations. In *Proceedings of the 1996 IEEE Symposium on Visual Languages*, pp. 336–343. https://doi.org/10.1109/vl.1996.545307
+
+Siddharth, L. & Luo, J. 2026 Knowledge of technological artifacts: Toward linguistic and structural foundations from patent descriptions. *Design Science* **12**, e17. https://doi.org/10.1017/dsj.2026.10064
+
+Simon, H. A. 2019 *The Sciences of the Artificial*, reissue of the 3rd edn. MIT Press. https://doi.org/10.7551/mitpress/12107.001.0001
+
+Springer, A. & Whittaker, S. 2019 Progressive disclosure: Empirically motivated approaches to designing effective transparency. In *Proceedings of the 24th International Conference on Intelligent User Interfaces (IUI '19)*, pp. 107–120. https://doi.org/10.1145/3301275.3302322
+
+Tanaka, D., Nomaguchi, Y. & Fujita, K. 2026 Design ideation through large language model-driven design operation: a case study of architectural design using pattern language. *Design Science* **12**, e23. https://doi.org/10.1017/dsj.2026.10061
+
+Van de Sompel, H., Payette, S., Erickson, J., Lagoze, C. & Warner, S. 2004 Rethinking scholarly communication: Building the system that scholars deserve. *D-Lib Magazine* **10** (9). https://doi.org/10.1045/september2004-vandesompel
+
+Yu, G. & Wang, X. 2026 Knows: Agent-native structured research representations. *arXiv preprint* arXiv:2604.17309v1. https://doi.org/10.48550/arXiv.2604.17309
+
+Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E. P., Zhang, H., Gonzalez, J. E. & Stoica, I. 2023 Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. *Advances in Neural Information Processing Systems* **36**, 46595–46623. https://doi.org/10.52202/075280-2020
+
+Zimmerman, J., Forlizzi, J. & Evenson, S. 2007 Research through design as a method for interaction design research in HCI. In *Proceedings of the SIGCHI Conference on Human Factors in Computing Systems*, pp. 493–502. https://doi.org/10.1145/1240624.1240704

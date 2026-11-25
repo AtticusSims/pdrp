@@ -1,0 +1,195 @@
+# Online Supplement S1: Protocol Specification, Worked Artifact Specimen, Extended Empirical Tables, and Audit Logs
+
+**Companion Supplement to:** *The Progressive-Disclosure Research Protocol (PDRP): Designing Layered Context for AI-Assisted Academic Reading and Interrogation* (*Design Science* Research Article)  
+**Author:** Atticus Sims (ORCID: 0009-0009-2933-2344)
+
+---
+
+## S1.1 Protocol Packaging, Corpus Traceability Key, and Tool-Interface Specification
+
+The Progressive-Disclosure Research Protocol packages every research record into a three-layer Research Object Crate whose `ro-crate-metadata.json` conforms to the RO-Crate 1.1 JSON-LD profile (forward-compatible with the RO-Crate 1.3 community specification; Sefton *et al.* 2026):
+
+- **Layer 0 (`COMPANION.md` + `ro-crate-metadata.json`):** Entry manifest strictly capped at `≤ 2,500` bytes (observed range across the four benchmark crates: `2,280–2,343` bytes, ~600 tokens). Includes a compact scope header, a verified **Negative-Coverage Map** enumerating absent data/analyses, and a flat one-line-per-card index grouped into five typed families (`C` Claims, `M` Methods/Protocols, `D` Data/Tables, `Q` Qualifications/Caveats, `U` Updates/Revisions). `ro-crate-metadata.json` records SHA-256 checksums for every immutable Layer-2 file.
+- **Layer 1 (`cards/*.md`):** 16–18 atomic Markdown evidence cards per paper (68 cards total; 140–320 words each). YAML frontmatter encodes `source_id:start-end` line-range locators and directed edges from a six-relation vocabulary (`supported_by`, `qualified_by`, `contradicted_by`, `depends_on`, `superseded_by`, `answers_review`).
+  - *Cycle 1 (`companion_v3`):* Invoking `read_card(card_id)` automatically traverses forward and reverse graph edges in software and appends up to three linked `Q`/`U` cards in the same tool response.
+  - *Cycle 2 (`companion_v3_1`, protocol-only redesign over byte-identical corpora, cards, and questions):* (1) adds an explicit **Article-Sufficiency Gate** permitting direct answers without opening cards when a query is completely self-contained in the main article; (2) strips redundant YAML from `read_card()` payloads (30–34% smaller), caps automatic co-retrieval to the top-2 most relevant `Q`/`U` cards, and appends a deterministic `[VERIFY_PRIMARY_SPANS]` footer flagging short primary source spans (`≤ 80` lines) for `read_source()` verification; and (3) enforces a **Bounded Absence Confirmation** rule limiting negative-coverage re-checks to at most one targeted BM25 query.
+- **Layer 2 (`corpora/sources/`):** Immutable primary article (`article.txt`) and all raw supplementary files (CSV tables, peer-review decision letters, author responses, checklists, and appendices), accessed via two flat tools shared identically between the raw-search and companion arms:
+  - `search_corpus(query, scope="all"|"article"|"supplementary", top_k=5)`: Okapi BM25 (*k*₁ = 1.5, *b* = 0.75) over overlapping line windows (zero-hit rate: `31 / 2,010 = 1.5%`, vs. ~66% under naive substring lookup in preliminary prototyping).
+  - `read_source(source_id, start_line, end_line)`: Direct bounded inspection (up to 150 lines per call), including an `"article"` alias.
+
+### Case-Title to Archive-Identifier Mapping
+
+| Main-Text Case Title | Frozen Archive Identifier | Disciplinary Genre | Contamination Control |
+|---|---|---|---|
+| *Computational Aesthetics* | `digital-creativity` | Empirical computational-design study (60 files, 1.08 MB) | Unpublished internal manuscript |
+| *Creative-Coding Review* | `jcal-review` | Qualitative narrative review & typology (8 files, 181 KB) | Unpublished internal manuscript |
+| *Hippocampal Ripples (eLife)* | `elife-111304` | Human intracranial electrophysiology (5 files, 125 KB) | *eLife* VOR, 20 Nov 2026 |
+| *Nanopore RNA Calibration (eLife)* | `elife-110672` | Direct RNA sequencing calibration (8 files, 37 KB) | *eLife* VOR, 20 Nov 2026 |
+
+---
+
+## S1.2 Worked Artifact Specimen: *Hippocampal Ripples (eLife)* (`elife-111304`)
+
+To make the designed artifact concrete, below are verbatim excerpts from the frozen open-access companion crate for Liu, Jing *et al.* (2026, *eLife* 15:RP111304, CC-BY-4.0), illustrating Layer 0, Layer 1, software-enforced qualification co-retrieval, and Cycle 2's verification cue.
+
+### Excerpt A — Layer-0 Entry Manifest (`COMPANION.md`, 2,319 bytes total)
+
+```markdown
+# Companion: Ramping-up hippocampal ripples and their neocortical coupling support human visual short-term memory
+DOI: 10.7554/eLife.111304 | VOR: 2026-11-20 | CC-BY-4.0 | 3 reviewed preprints -> VOR v1
+
+## Coverage Map
+- **Only in `author_response`:** 4 omitted controls (1/f slope, ripple-only trials, probe-lock, LTM split), GLMM formulas, HFA beta=0.002, 0-1s encoding p-values, preprint "solid" assessment, revision log.
+- **Only in `supp1` & `mdar`:** Per-patient HPC/LTL/AMY/PHC/ERC channels, HPC slopes, trials (N=3,444); MDAR: Liu 2020 reanalysis, no preregistration, power calc, or blinding.
+- **Only in `elife_assessment_and_versions` & `public_reviews`:** "solid"->"convincing" upgrade, editors, Reviewers #1-#3 VOR caveats (HFA, AMY+ERC, LTM, >1s semantics).
+- **Absent:** Raw iEEG traces, trial decoding matrices, OSF files/URL, healthy controls, load/delay/lure manipulations, saccades, per-patient age/sex/meds/SOZ/hemisphere, LTL slopes.
+
+## Card Index (excerpt of 16 total)
+- C02 [claim] HPC ramping predicts VSTM vs LTL | ramping, GLMM, accuracy, gray-matter
+- M02 [method] LMM/GLMM specs & trial rules | Poisson, lme4, emmeans, 5000-perms
+- Q01 [qualification] Epilepsy cohort, HFA & MTL gaps | HFA, p=0.662, AMY, ERC
+- U01 [update] Preprint->VOR & assessment upgrade | versions, solid, convincing
+```
+
+### Excerpt B — Layer-1 Claim Card (`C02`) Triggering Software Co-Retrieval of Qualification Card (`Q01`)
+
+When an AI assistant invokes `read_card("C02")`, the retrieval server reads `C02`'s directed link metadata (`source_locators: [article:98-122, supp1:11-26, author_response:139-156, author_response:252-255]`, `linked_cards: [Q01, Q02, Q03]`), strips redundant YAML headers in Cycle 2, and **automatically bundles `Q01`** (which carries an inbound `qualifies -> C02` edge) into the same tool response:
+
+**Requested Card `C02` (condensed excerpt):** Across the 7 s maintenance delay, an all-trial Poisson GLMM reveals progressive ramping-up of HPC ripple counts (`β=0.012, z=4.678, p<0.001`; `article:101`) with a significant `time × accuracy` interaction (`β=0.018, z=2.171, p=0.030`), driven by remembered trials (`β=0.014, p_FDR<0.001`) and absent on forgotten trials (`β=−0.002, p_FDR=0.778`; `article:103`). A three-way `time × accuracy × region` GLMM confirms dissociation from LTL (`β=0.053, p=0.044`; `article:122`, `author_response:154-156`).
+
+**Auto-Bundled Qualification Card `Q01` (software forcing function, excerpt):**
+
+1. *Clinical neurosurgical sample without healthy controls or design safeguards:* All 13 participants are drug-resistant epilepsy patients reanalyzed from Liu et al. (2020a) with no healthy controls, preregistration, power calculation, or blinding (`mdar:102-104, 148-150`).
+2. *Unresolved distinction between sharp-wave ripples and broadband HFA:* Continuous 70–180 Hz HFA shows a marginal maintenance ramp (`β=0.002, p=0.074`) and **does not differ significantly in slope from detected HPC ripples (`p=0.662`; `article:101`, `author_response:200`)**; Reviewer #2 characterizes the VOR as showing *"solid evidence that hippocampal high-frequency activity ramps up"* (`public_reviews:29`).
+3. *Declined non-hippocampal MTL control:* Authors declined Reviewer #3's amygdala/entorhinal control due to sparse electrode sampling (`supp1:11-26`, `author_response:206-209`).
+
+**Cycle 2 Deterministic Footer:** `[VERIFY_PRIMARY_SPANS] Short primary spans linked (≤80 lines): supp1:11-26, author_response:139-156, public_reviews:29-41. Call read_source() before quoting verbatim wording or exact table cells.`
+
+---
+
+## S1.3 Evaluated Model Fleet and Runtime Parameters
+
+All tool-calling trials were capped at 8 turns and 8,192 maximum output tokens with empty-output single-turn recovery. Cloud models executed via OpenRouter; local open-weight models executed at 100% GPU residency on a single NVIDIA RTX 5090 (32 GB VRAM) via Ollama `0.40.16` native `/api/chat`.
+
+| Model Identifier | Provider / Tier | Native Reasoning Default | Context Cap | Ablation Toggle Arm |
+|---|---|---|---|---|
+| `qwen/qwen3.8-max-0902` | Cloud (Alibaba) | Mandatory ON (`HTTP 400` if disabled) | Provider default | — |
+| `mistralai/mistral-large-4-0` | Cloud (Mistral) | Mandatory ON (`HTTP 400` if disabled) | Provider default | — |
+| `thinkingmachines/inkling-2-small` | Cloud Open-Weight (Apache 2.0 MoE) | Mandatory ON (`HTTP 400` if disabled) | Provider default | — |
+| `x-ai/grok-4.6` | Cloud (xAI; also question author) | Mandatory ON (`HTTP 400` if disabled) | Provider default | — |
+| `deepseek/deepseek-v3.2` | Cloud (DeepSeek 685B MoE; also card auditor) | OFF (`reasoning_tokens = 0`) | Provider default | ON (`effort="medium"`) |
+| `qwen3.8:27b-q4_K_M` | Local RTX 5090 (27B Dense) | ON (`think=True`) | 49,152 (40,960 OFF) | OFF (`think=False`) |
+| `gemma4:31b-it-qat` | Local RTX 5090 (31B Dense) | ON (`think=True`) | 40,960 | *(OOM under explicit toggle)* |
+| `gpt-oss:20b` | Local RTX 5090 (20B MoE) | Medium (`think="medium"`) | 49,152 | Low (`think="low"`) |
+
+Blinded evaluation across all 2,880 receiving trials (5,760 judge API calls, 0 judge errors) was performed independently by two zero-overlap cross-family models: **Judge A (`z-ai/glm-5.3`, Zhipu)** and **Judge B (`moonshotai/kimi-k2.5`, Moonshot)** (`effort="low"`, `max_tokens=3000`). Inter-judge agreement: `N = 2,304` main trials Cohen's `κ = 0.8200` (clean success) / `0.8845` (atomic rubric items); `n = 576` reasoning-ablation trials `κ = 0.7459`.
+
+---
+
+## S1.4 Extended Per-Model, Per-Paper, and Per-Task Main Benchmark Tables (`N = 2,304`)
+
+**Table S1. Per-model strict consensus clean success (%) and Cycle 1 → Cycle 2 tool-skipping telemetry (`n = 64` card-blind questions per model per arm).**
+
+| Model | `paper_only` | `raw_supplements` | `companion_v3` (C1) | `companion_v3_1` (C2) | `naive_preload` (32 Q) | `v3.1` vs. `raw` Δ | Article-Only 0-Tool (`C1 → C2`) | Qualification 0-Tool (`C1 → C2`) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `qwen/qwen3.8-max-0902` | 40.6% | 84.4% | 93.8% | **95.3%** | 84.4% | +10.9 pp | 0 → 0/16 | 0 → 0/16 |
+| `mistralai/mistral-large-4-0` | 48.4% | 89.1% | 89.1% | **92.2%** | 84.4% | +3.1 pp | 0 → 8/16 | 0 → 0/16 |
+| `thinkingmachines/inkling-2-small` | 43.8% | 92.2% | 85.9% | **92.2%** | 93.8% | +0.0 pp | 0 → 2/16 | 0 → 0/16 |
+| `x-ai/grok-4.6` | 42.2% | 87.5% | 84.4% | **89.1%** | 78.1% | +1.6 pp | 0 → 5/16 | 0 → 1/16 |
+| `deepseek/deepseek-v3.2` (OFF) | 32.8% | 54.7% | **70.3%** | 54.7% | 56.2% | +0.0 pp | 2 → 11/16 | 1 → **15/16** |
+| `qwen3.8:27b-q4_K_M` (Local) | 43.8% | 78.1% | 76.6% | **79.7%** | 75.0% | +1.6 pp | 1 → 13/16 | 0 → 4/16 |
+| `gemma4:31b-it-qat` (Local) | 29.7% | 50.0% | 46.9% | **54.7%** | 46.9% | +4.7 pp | 16 → 16/16 | 16 → 11/16 |
+| `gpt-oss:20b` (Local) | 28.1% | 37.5% | **46.9%** | 39.1% | 46.9% | +1.6 pp | 8 → 6/16 | 6 → 3/16 |
+
+**Table S2. Per-paper clean success (%) and median total tokens across conditions (`n = 128` trials per paper per arm).**
+
+| Case Title (`archive_id`, Supp. Scale) | `paper_only` Clean (Med. Tok) | `raw_supplements` Clean (Med. Tok) | `companion_v3` Clean (Med. Tok) | `companion_v3_1` Clean (Med. Tok) | `naive_preload` Clean (Med. Tok) | Token Δ vs. `raw` (`C1 / C2`) & vs. `preload` (`C1 / C2`) |
+|---|---:|---:|---:|---:|---:|---|
+| *Computational Aesthetics* (`digital-creativity`, 60 files, 1.08 MB) | 30.5% (12,850) | 57.0% (63,794) | **59.4%** (46,974) | **59.4%** (50,617) | 58.6% (71,488) | **−26% / −21%** vs. `raw`; **−34% / −29%** vs. `preload` |
+| *Creative-Coding Review* (`jcal-review`, 8 files, 181 KB) | 36.7% (32,876) | 67.2% (105,778) | **68.0%** (108,061) | **68.0%** (109,199) | — | +2% / +3% vs. `raw` |
+| *Hippocampal Ripples* (`elife-111304`, 5 files, 125 KB) | 40.6% (19,919) | 78.1% (71,003) | 82.8% (71,352) | **85.9%** (75,639) | 82.8% (72,452) | +0% / +7% vs. `raw`; −2% / +4% vs. `preload` |
+| *Nanopore RNA Calibration* (`elife-110672`, 8 files, 37 KB) | 46.9% (24,410) | 84.4% (56,300) | **86.7%** (89,566) | 85.2% (83,951) | — | +59% / +49% vs. `raw` |
+
+**Table S3. Per-task-obligation clean success (%) and median total tokens across all eight models (`N = 2,304`).**
+
+| Reading Obligation (`n` / arm) | `paper_only` | `raw_supplements` | `companion_v3` | `companion_v3_1` | Key Paired Contrasts (`C2` vs. `raw`) |
+|---|---:|---:|---:|---:|---|
+| Article-Only (`128`) | 86.7% (22,451) | 86.7% (33,477) | 88.3% (52,818) | **90.6%** (40,089) | +3.9 pp; tokens cut −24% vs. Cycle 1 |
+| Supplementary Fact (`128`) | 0.0% (22,914) | **73.4%** (64,921) | **73.4%** (77,604) | 72.7% (77,990) | −0.8 pp parity |
+| Qualification Binding (`128`) | 38.3% (22,598) | 57.0% (81,347) | 59.4% (73,688) | **62.5%** (62,485) | +5.5 pp; tokens cut −15% vs. Cycle 1 |
+| Temporal Evolution (`64`) | 1.6% (23,231) | **65.6%** (85,073) | **65.6%** (93,406) | 59.4% (86,967) | −6.2 pp (driven by DeepSeek OFF & GPT-OSS 20B) |
+| Unanswerable Abstention (`64`) | 57.8% (23,153) | 73.4% (166,547) | **85.9%** (165,477) | **85.9%** (115,747) | **+12.5 pp (+8/−0, *p* = 0.0078); −31% tokens (*p* = 0.0329)** |
+
+---
+
+## S1.5 Role-Overlap Exclusion & Within-Model Qualification Sensitivity Checks
+
+Because Grok 4.6 authored the 64 card-blind questions and DeepSeek V3.2 audited the 68 cards, Table S4 verifies that core empirical findings hold (and slightly strengthen) when excluding either or both models from the reader fleet, and reports clean **within-model** qualification-binding contrasts free of model-tier confounding.
+
+**Table S4. Role-overlap exclusion sensitivity and within-model qualification-binding contrasts.**
+
+| Sensitivity or Mechanism Check | Matched Pairs (*n*) | Comparison (`Cycle 2` vs. `Raw BM25` unless noted) | Gains / Losses (*p*) | Notes & Hallucinations |
+|---|---:|---|---:|---|
+| Frontier-3 Cloud (excl. Grok 4.6) | 192 | **93.2% vs. 88.5% (+4.7 pp)** | +12 / −3 (**0.0352**) | **0/192 hallucinations** (vs. 0/256 Frontier-4) |
+| Excl. Grok 4.6 + DeepSeek (6 models, overall) | 384 | 75.5% vs. 71.9% (+3.6 pp) | +34 / −20 (0.0759) | Stronger directional gain than 8-model pool |
+| Excl. Grok 4.6 + DeepSeek (6 models, Unanswerable) | 48 | **85.4% vs. 70.8% (+14.6 pp)** | **+7 / −0 (0.0156)** | Zero losses across all 6 independent models |
+| Excl. Grok 4.6 only (7 models, Unanswerable) | 56 | **83.9% vs. 69.6% (+14.3 pp)** | **+8 / −0 (0.0078)** | Identical zero-loss abstention win |
+| Frontier-4 Cloud: Qualification Binding | 64 | **92.2% vs. 82.8% (+9.4 pp)** | 59/64 vs. 53/64 | 63/64 cards opened; **0% overclaims** |
+| DeepSeek V3.2 OFF: Qualification Binding (within-model) | 16 | Raw 25.0% → **C1 56.2%** → C2 31.2% | 4 → 9 → 5 / 16 | C1 opened 15/16; C2 bypassed 15/16 |
+| DeepSeek V3.2 ON: Qualification Binding (within-model) | 16 | Raw 18.8% → C1 56.2% → **C2 50.0%** | 3 → 9 → 8 / 16 | C2 ON opened 14/16 (0 zero-tool skips, 0% overclaim) |
+| Qwen 3.8 27B OFF: Qualification Binding (within-model) | 16 | Raw 56.2% → C1 68.8% → **C2 75.0%** | 9 → 11 → 12 / 16 | 16/16 cards opened; 0% overclaim |
+
+---
+
+## S1.6 Human Audit Edit Log & Single-Judge Sensitivity Table
+
+### Author Crate Audit Summary & Edit Log (`68/68` Saved Cards; `64` Approved As-Is [94.1%], `4` Minor Edits [5.9%], `0` Substantive Errors)
+
+| Case Title (`archive_id`) | Audited | Approved As-Is | Minor Edit | Substantive Error | Review Time |
+|---|---:|---:|---:|---:|---:|
+| *Computational Aesthetics* (`digital-creativity`) | 18 | 17 | 1 | 0 | 17.4 min (stopwatch) |
+| *Creative-Coding Review* (`jcal-review`) | 16 | 16 | 0 | 0 | 12.6 min (stopwatch) |
+| *Hippocampal Ripples* (`elife-111304`) | 16 | 15 | 1 | 0 | ~15 min (self-reported) |
+| *Nanopore RNA Calibration* (`elife-110672`) | 18 | 16 | 2 | 0 | ~15 min (self-reported) |
+| **Total** | **68** | **64 (94.1%)** | **4 (5.9%)** | **0 (0.0%)** | **15.0 min mean (timed)** |
+
+1. **`digital-creativity | C01` (minor edit):** Clarified `"three retries"` to `"three attempts in total"` (exact stopwatch time for `digital-creativity`: `1,043 s = 17.4 min`; `jcal-review`: `753 s = 12.6 min`; external *eLife* papers: self-reported `~15 min` each; DeepSeek V3.2's `C02` audit flag verified as a false positive against `article:224–225`).
+2. **`elife-111304 | C02` (minor edit):** Replaced `"null group-level slopes"` with `"no significant remembered–forgotten slope difference"` to match the paired contrast *t*(12) = −0.707, *p* = 0.493 (`article:113`).
+3. **`elife-110672 | Q02` (minor edit):** Replaced `">5% non-conversion"` with `"approximately 5% non-conversion"` (the four libraries in Supplementary file 3 span `4.6–5.2%`; only one exceeds `5%`).
+4. **`elife-110672 | Q04` (minor edit):** Corrected counting typo `"three residual inconsistencies"` to `"four"` to match the numbered list.
+
+### Blinded Calibration Unweighted Totals, Scoring Process, & Single-Judge Robustness (`n = 180`)
+- **Scoring process:** All 180 stratified responses were graded blind by the sole author for overall clean-success pass/fail and binary error flags (overclaiming, hallucination, and wrong abstention); optional per-criterion checkboxes were logged on `49/180` items while all `180/180` items received complete blind verdict and error-flag ratings.
+- **Unweighted sample totals (50/50 unanimous vs. 6.5×-oversampled disputes):** Consensus `κ = 0.2279` (`55.6%` agree); Judge A (`GLM-5.3`) `κ = 0.5262` (`83.3%` agree); Judge B (`Kimi-K2.5`) `κ = 0.2413` (`60.0%` agree); Overclaim `κ = 0.2151`; Hallucination `κ = 0.1880`.
+- **Population cell distribution (`N = 2,304`) vs. `n = 180` sample:** `(GLM=1, Kimi=1)`: `1,508` (`65.5%`) / `n = 65` (`95.4%` human pass); `(0, 0)`: `619` (`26.9%`) / `n = 25` (`12.0%` human pass); `(1, 0)`: `143` (`6.2%`) / `n = 74` (`83.8%` human pass); `(0, 1)`: `34` (`1.5%`) / `n = 16` (`75.0%` human pass).
+- **Differential condition bias (`companion_v3 + v3.1`, `n = 72` vs. `raw_supplements`, `n = 46`; unweighted stratified sample):**
+  - *2-Judge Consensus:* AI-lenient `2/72 (2.8%)` vs. `1/46 (2.2%)` (Fisher *p* = `1.0000`), AI-strict `32/72 (44.4%)` vs. `25/46 (54.3%)` (*p* = `0.3467`).
+  - *Judge A (`GLM-5.3`):* AI-lenient `8/72 (11.1%)` vs. `5/46 (10.9%)` (*p* = `1.0000`), AI-strict `7/72 (9.7%)` vs. `5/46 (10.9%)` (*p* = `1.0000`).
+  - *Judge B (`Kimi-K2.5`):* AI-lenient `6/72 (8.3%)` vs. `1/46 (2.2%)` (*p* = `0.2445`), AI-strict `25/72 (34.7%)` vs. `22/46 (47.8%)` (*p* = `0.1800`).
+
+#### Disagreement-Enriched Calibration Breakdown by Experimental Arm (*n* = 180)
+
+| Condition (Disagreement-Enriched Sample) | *n* | Human Clean | AI Consensus Clean | AI − Human Bias | Human–AI Agree |
+|---|---:|---:|---:|---:|---:|
+| Manuscript Only (`paper_only`) | 36 | 58.3% | 30.6% | −27.8 pp | 72.2% |
+| Raw Full-Text Search (`raw_supplements`) | 46 | 84.8% | 32.6% | −52.2 pp | 43.5% |
+| Cycle 1 Protocol (`companion_v3`) | 47 | 80.9% | 34.0% | −46.8 pp | 44.7% |
+| Cycle 2 Protocol (`companion_v3_1`) | 25 | 68.0% | 36.0% | −32.0 pp | 68.0% |
+| Full-Card Preload (`naive_preload`) | 26 | 92.3% | 53.8% | −38.5 pp | 61.5% |
+
+**Table S5. Complete single-judge sensitivity check, Holm–Bonferroni multiplicity adjustment, question-clustered inference, and token/hallucination receipts across all primary benchmark contrasts.**
+
+| Primary Contrast (Matched Pairs) | 2-Judge Consensus (`A ∧ B`) | Judge A (`GLM-5.3`, `κ = 0.794`) | Judge B (`Kimi-K2.5`, `κ = 0.722`) | Holm *p*_adj / Question-Cluster 95% CI & Tokens |
+|---|---|---|---|---|
+| Cycle 2 vs. Manuscript Only (*n* = 512) | 74.6% vs. 38.7% (**+35.9 pp**, *p* < 10⁻⁴⁵) | 79.5% vs. 42.8% (**+36.7 pp**, *p* < 10⁻⁴⁸) | 76.0% vs. 39.5% (**+36.5 pp**, *p* < 10⁻⁴⁶) | Holm *p* < 10⁻⁴⁴; Q-cluster [+27.0, +44.9 pp] |
+| All 8 Models: Cycle 2 vs. Raw BM25 (*n* = 512) | 74.6% vs. 71.7% (+2.9 pp, *p* = 0.0959) | 79.5% vs. 79.9% (−0.4 pp, *p* = 0.9036) | 76.0% vs. 73.2% (+2.7 pp, *p* = 0.1196) | Holm *p* = 0.096; Q-cluster [−0.2, +5.9 pp] |
+| Unanswerable Abstention: Cycle 2 vs. Raw (*n* = 64) | **85.9% vs. 73.4% (+12.5 pp, *p* = 0.0078)** | **90.6% vs. 78.1% (+12.5 pp, *p* = 0.0078)** | **85.9% vs. 73.4% (+12.5 pp, *p* = 0.0078)** | **Holm *p* = 0.039**; Q-Wilcoxon *p* = 0.0312; **−31% tok** |
+| Frontier-4 Cloud: Cycle 2 vs. Raw (*n* = 256) | **92.2% vs. 88.3% (+3.9 pp, *p* = 0.0309)** | 96.1% vs. 94.5% (+1.6 pp, *p* = 0.4545) | 92.6% vs. 89.5% (+3.1 pp, *p* = 0.0574) | Holm *p* = 0.093; Q-cluster [+0.8, +7.8 pp]; **0/256 vs. 1/256 hall.** |
+| Frontier-4 Cloud: Cycle 2 vs. Preload (*n* = 128) | **93.0% vs. 85.2% (+7.8 pp, *p* = 0.0129)** | 95.3% vs. 89.8% (+5.5 pp, *p* = 0.0654) | **93.0% vs. 85.9% (+7.0 pp, *p* = 0.0225)** | Holm *p* = 0.052; Q-Wilcoxon *p* = 0.0469; **−8% tok** |
+| All-5 Cloud Reasoning-ON (post-hoc pooled, *n* = 320) | **88.4% vs. 82.8% (+5.6 pp, *p* = 0.0014)** | **93.1% vs. 88.8% (+4.4 pp, *p* = 0.0161)** | **90.0% vs. 84.7% (+5.3 pp, *p* = 0.0033)** | **Holm *p* = 0.010**; Q-Wilcoxon *p* = 0.0024; **−17% tok (*p* = 0.0003)**; 1/320 vs. 1/320 hall. |
+| All-8 Unified Reasoning-ON (post-hoc, *n* = 512: 7 native-ON + DeepSeek ON) | **77.0% vs. 72.5% (+4.5 pp, *p* = 0.0076)** | 82.0% vs. 79.5% (+2.5 pp, *p* = 0.1421) | **78.9% vs. 74.2% (+4.7 pp, *p* = 0.0063)** | vs. Cycle 1 (`73.6%`): **+3.3 pp (*p* = 0.0498)** consensus (Judge A +1.2 pp, *p* = 0.53); Overclaim 2.5%, Halluc. 3.7% |
+| DeepSeek V3.2 ON vs. OFF Gate DiD (`C2 − C1`, *n* = 64) | **+23.4 pp (Wilcoxon *p* = 0.0039)** | **+25.0 pp (*p* = 0.0018)** | +14.1 pp (*p* = 0.0856) | **Holm *p* = 0.023**; `DiD(C2 − Raw)` = +12.5 pp (*p* = 0.1197; Judge A +23.4 pp, *p* = 0.0070) |
+| DeepSeek V3.2 Reasoning ON: Cycle 2 vs. Raw (*n* = 64) | **73.4% vs. 60.9% (+12.5 pp, *p* = 0.0386)** | **81.2% vs. 65.6% (+15.6 pp, *p* = 0.0129)** | **79.7% vs. 65.6% (+14.1 pp, *p* = 0.0490)** | **143,606 vs. 197,084 tok (−27.1%)**; 1/64 vs. 0/64 hall. |
+| Qwen 3.8 27B OFF (All *n* = 64; 40K cap) | **89.1% vs. 67.2% (+21.9 pp, *p* = 0.0013)** | **89.1% vs. 68.8% (+20.3 pp, *p* = 0.0023)** | **90.6% vs. 68.8% (+21.9 pp, *p* = 0.0013)** | 2 vs. 9 GPU HTTP 500 overflows |
+| Qwen 3.8 27B OFF (52 common zero-error trials) | **90.4% vs. 76.9% (+13.5 pp, *p* = 0.0156)** | **90.4% vs. 78.8% (+11.5 pp, *p* = 0.0312)** | **92.3% vs. 78.8% (+13.5 pp, *p* = 0.0156)** | Confirms accuracy gain independent of GPU overflows |
+| Pooled-3 OFF (All *n* = 192 / Crash-Excluded *n* = 181) | +7.3 pp (*p* = 0.0488) / +3.9 pp (*p* = 0.2962) | +5.7 pp (*p* = 0.1439) / +2.2 pp (*p* = 0.6177) | +8.9 pp (*p* = 0.0161) / +5.5 pp (*p* = 0.1214) | Abstention crash-excl. (*n* = 20): +5.0 pp (*p* = 1.000) |

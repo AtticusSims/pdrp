@@ -1,0 +1,291 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.1/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Online Supplement S2: Self-Referential PDRP Research Companion for The Progressive-Disclosure Research Protocol (PDRP): Designing Layered Context for AI-Assisted Academic Reading and Interrogation",
+      "description": "Mechanically validated three-layer Progressive-Disclosure Research Protocol (PDRP) RO-Crate Companion allowing reviewers and readers to interrogate this Design Science manuscript using its own bounded entry manifest, atomic qualification-bound evidence cards, and Okapi BM25 / MCP retrieval engine.",
+      "datePublished": "2026-11-25",
+      "license": "CC-BY-4.0",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Atticus Sims",
+          "@id": "https://orcid.org/0009-0009-2933-2344"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "COMPANION.md"
+        },
+        {
+          "@id": "tools/companion_reader.py"
+        },
+        {
+          "@id": "cards/C01-manuscript-only-vs-bm25-parity.md"
+        },
+        {
+          "@id": "cards/C02-negative-coverage-abstention-win.md"
+        },
+        {
+          "@id": "cards/C03-archive-scale-token-crossover.md"
+        },
+        {
+          "@id": "cards/C04-cycle2-procedural-redesign-and-cloud.md"
+        },
+        {
+          "@id": "cards/C05-within-weight-reasoning-gate-fragility.md"
+        },
+        {
+          "@id": "cards/M01-three-layer-rocrate-protocol-architecture.md"
+        },
+        {
+          "@id": "cards/M02-zero-contamination-testbed-and-matrix.md"
+        },
+        {
+          "@id": "cards/M03-blinded-scoring-inference-and-human-design.md"
+        },
+        {
+          "@id": "cards/D01-frozen-corpora-and-reader-fleet.md"
+        },
+        {
+          "@id": "cards/D02-human-validation-68-audit-and-180-calibration.md"
+        },
+        {
+          "@id": "cards/Q01-single-judge-ceiling-and-multiplicity-bounds.md"
+        },
+        {
+          "@id": "cards/Q02-qwen-40k-gpu-cap-and-pooled-off-sensitivity.md"
+        },
+        {
+          "@id": "cards/Q03-single-author-validation-and-corpus-limits.md"
+        },
+        {
+          "@id": "cards/Q04-dual-role-overlap-and-dp4-ablation-gap.md"
+        },
+        {
+          "@id": "cards/U01-cycle1-to-cycle2-procedural-redesign.md"
+        },
+        {
+          "@id": "corpus/article.txt"
+        },
+        {
+          "@id": "corpus/sources/supplement_s1.txt"
+        },
+        {
+          "@id": "corpus/sources/human_validation_report.txt"
+        },
+        {
+          "@id": "corpus/sources/reasoning_ablation_report.txt"
+        },
+        {
+          "@id": "corpus/sources/results_report.txt"
+        }
+      ]
+    },
+    {
+      "@id": "COMPANION.md",
+      "@type": "File",
+      "name": "Layer-0 PDRP Entry Manifest (<=2.5 KB)",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2216",
+      "sha256": "7a327b4f9ef3e3f0ceddb71d65adcbc1218e2f569df8f8d1a4307204a698b749"
+    },
+    {
+      "@id": "tools/companion_reader.py",
+      "@type": "File",
+      "name": "Self-Contained PDRP Retrieval Engine, Validator, and MCP Server",
+      "additionalType": "software_tool",
+      "encodingFormat": "text/x-python",
+      "contentSize": "22783",
+      "sha256": "fbde3f44ea9448c09f94f737760c701963f3e1776d0a1039167328107abb8166"
+    },
+    {
+      "@id": "cards/C01-manuscript-only-vs-bm25-parity.md",
+      "@type": "File",
+      "name": "C01: PDRP beats manuscript-only reading by 35.9 pp while staying near aggregate parity with strong BM25",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "contentSize": "1941",
+      "sha256": "e5c22f4214e148649d82ad1668af0b9e051175f00d7c557dd87d7ff82590ae17"
+    },
+    {
+      "@id": "cards/C02-negative-coverage-abstention-win.md",
+      "@type": "File",
+      "name": "C02: Explicit Negative-Coverage Map yields judge-invariant +12.5 pp unanswerable abstention gain with 31% fewer tokens",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2098",
+      "sha256": "3f809d3f211fa4ae6f6c99a7c475029154fcede419da2463bc7cffc25c8efa6c"
+    },
+    {
+      "@id": "cards/C03-archive-scale-token-crossover.md",
+      "@type": "File",
+      "name": "C03: Token efficiency follows an archive-scale crossover from -21%/-34% savings at 60 files to +49% overhead at 37 KB",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2045",
+      "sha256": "dc626a50452beef406d053950a599109ed396de4a2c1418a267d11e328dbcb61"
+    },
+    {
+      "@id": "cards/C04-cycle2-procedural-redesign-and-cloud.md",
+      "@type": "File",
+      "name": "C04: Cycle 2 procedural rules over byte-identical cards halve compression substitution and lift reasoning cloud models",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2294",
+      "sha256": "af091f8569a8f218feb843b054e76f069fd8c2e99931166974751ae9f62bcbbd"
+    },
+    {
+      "@id": "cards/C05-within-weight-reasoning-gate-fragility.md",
+      "@type": "File",
+      "name": "C05: Within-weight reasoning toggles expose architecture-dependent fragility of natural-language bypass gates (DP5)",
+      "additionalType": "claim",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2295",
+      "sha256": "5c9c68c96aa21d77095068af13915ea02b5df5990b37b568da61f5d6576c7911"
+    },
+    {
+      "@id": "cards/M01-three-layer-rocrate-protocol-architecture.md",
+      "@type": "File",
+      "name": "M01: Three-layer RO-Crate PDRP architecture, Gericke method elements, and software forcing function",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "contentSize": "1999",
+      "sha256": "184fdf15c5324736214f263c6c986242c509d6d1c64d31668aa57eb37e358fa3"
+    },
+    {
+      "@id": "cards/M02-zero-contamination-testbed-and-matrix.md",
+      "@type": "File",
+      "name": "M02: Four-paper zero-contamination testbed, 64 card-blind questions, and 2,880-trial cumulative design matrix",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2050",
+      "sha256": "a00b0bca0d22ec5d46b86702b3031dad57f83e83e84cb526f62e0c0275328089"
+    },
+    {
+      "@id": "cards/M03-blinded-scoring-inference-and-human-design.md",
+      "@type": "File",
+      "name": "M03: Zero-overlap cross-family blinded judging, confirmatory/multiplicity inference, and two-task human validation",
+      "additionalType": "method",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2207",
+      "sha256": "98caf0eabd8d33da2f299bcf9de8a46fb383c1fb2814e61d80207a6a49d94062"
+    },
+    {
+      "@id": "cards/D01-frozen-corpora-and-reader-fleet.md",
+      "@type": "File",
+      "name": "D01: Specifications of the four multidisciplinary frozen archives and eight-model cloud/local reader fleet",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2117",
+      "sha256": "c97dbc6cd9bc4aab59f10434899e1b664dad9d5f3193e896856e974c98a95bd5"
+    },
+    {
+      "@id": "cards/D02-human-validation-68-audit-and-180-calibration.md",
+      "@type": "File",
+      "name": "D02: Complete 68/68 Author Crate Audit and 180-item Blinded Judge Calibration dataset and reliability CIs",
+      "additionalType": "data",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2260",
+      "sha256": "0b31fac0e0716a52040fdab29d87c42fc934553163f2a305d785972919ae3604"
+    },
+    {
+      "@id": "cards/Q01-single-judge-ceiling-and-multiplicity-bounds.md",
+      "@type": "File",
+      "name": "Q01: Single-judge ceiling sensitivity and Holm-Bonferroni multiplicity bounds separating durable vs. narrow margins",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2355",
+      "sha256": "038053416a14387649af5e4dbdede43f14f2fdda250ae93ce6492f9be71d466b"
+    },
+    {
+      "@id": "cards/Q02-qwen-40k-gpu-cap-and-pooled-off-sensitivity.md",
+      "@type": "File",
+      "name": "Q02: Qwen 3.8 27B 49K-to-40K GPU context-cap confound, crash-excluded Pooled-OFF collapse, and gate inversion",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2149",
+      "sha256": "9c23be0cca178b46d90cd27b668b4a8a11d73022d5b567bbee39ce5313db44cf"
+    },
+    {
+      "@id": "cards/Q03-single-author-validation-and-corpus-limits.md",
+      "@type": "File",
+      "name": "Q03: Single-author validation bounds, bias-test statistical power, and N=4 multidisciplinary corpus scope",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2174",
+      "sha256": "f0a949b04811fa627276dcef71f2cee3480de3d089c84c2c0653a6ec926cab00"
+    },
+    {
+      "@id": "cards/Q04-dual-role-overlap-and-dp4-ablation-gap.md",
+      "@type": "File",
+      "name": "Q04: Dual-role reader overlap (Grok 4.6 & DeepSeek V3.2) with exclusion checks, and missing direct DP4 ablation",
+      "additionalType": "qualification",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2482",
+      "sha256": "39985dddacc568961852566a8438a5b74c7735c8092f74101a48aafabacc4789"
+    },
+    {
+      "@id": "cards/U01-cycle1-to-cycle2-procedural-redesign.md",
+      "@type": "File",
+      "name": "U01: Telemetry-driven Cycle 1 to Cycle 2 procedural redesign over byte-identical corpora and cards",
+      "additionalType": "update",
+      "encodingFormat": "text/markdown",
+      "contentSize": "2005",
+      "sha256": "ca042f1e77ab13ac74829c42f4cedfbe1e78abb3705bef1299d1151a6381c1c1"
+    },
+    {
+      "@id": "corpus/article.txt",
+      "@type": "File",
+      "name": "Frozen Manuscript",
+      "additionalType": "primary_article",
+      "encodingFormat": "text/markdown",
+      "contentSize": "75192",
+      "sha256": "ff4b70d5710c4e92ccc519bbb0c14437f96030990f5bb3904a51fb2bfec25538"
+    },
+    {
+      "@id": "corpus/sources/supplement_s1.txt",
+      "@type": "File",
+      "name": "Online Supplement S1 (Protocol Spec, Worked Specimen, Tables S1-S5, Audit Log)",
+      "additionalType": "supplement",
+      "contentSize": "23264",
+      "sha256": "1e417f5c151fdde5a779c2d96dfc1139f205a1d9bd6f822f0f8d137a02d05c33"
+    },
+    {
+      "@id": "corpus/sources/human_validation_report.txt",
+      "@type": "File",
+      "name": "Human Validation & Blinded Judge Calibration Report (68/68 crate audit + 180/180 calibration)",
+      "additionalType": "validation_report",
+      "contentSize": "2682",
+      "sha256": "7237c15daf896f5f1e9194b04cc551d3eef3eb87fba946c04f735bf3c20afb5b"
+    },
+    {
+      "@id": "corpus/sources/reasoning_ablation_report.txt",
+      "@type": "File",
+      "name": "Within-Weight Bidirectional Reasoning Toggle Report (n=576 isolated trials)",
+      "additionalType": "ablation_report",
+      "contentSize": "2134",
+      "sha256": "71f8d5cc8cfd5e22664fb0cbbbe6b0427c5af4d0f143c3a9cbc4490f14880f4b"
+    },
+    {
+      "@id": "corpus/sources/results_report.txt",
+      "@type": "File",
+      "name": "Main Benchmark Statistical Results Report (N=2,304 trials)",
+      "additionalType": "benchmark_report",
+      "contentSize": "15234",
+      "sha256": "8d2cf377d6c2fb2f732956bf5e7d88c86f9f69b5b4c4cb6e4fa620b3101c5182"
+    }
+  ]
+}
